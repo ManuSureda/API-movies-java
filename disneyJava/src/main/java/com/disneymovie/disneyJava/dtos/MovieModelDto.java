@@ -2,6 +2,7 @@ package com.disneymovie.disneyJava.dtos;
 
 import com.disneymovie.disneyJava.models.CharacterModel;
 import com.disneymovie.disneyJava.models.MovieGenreModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,16 +23,17 @@ public class MovieModelDto {
     private String tittle;
     private Date releaseDate;
     private Integer score;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<MovieGenreModel> genres = new ArrayList<>();
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Integer> genresIdList = new ArrayList<>();
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<CharacterModel> characters = new ArrayList<>();
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<Integer> charactersIdList = new ArrayList<>();
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonIgnore
     public boolean isValid() {
         return !StringUtils.isBlank(imgUrl) &&
                 !StringUtils.isBlank(tittle) &&

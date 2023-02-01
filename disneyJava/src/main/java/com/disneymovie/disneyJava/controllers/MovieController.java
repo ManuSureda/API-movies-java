@@ -103,6 +103,25 @@ public class MovieController {
     }
 
 //READ
+    @GetMapping(params = {"idMovie"})
+    public ResponseEntity<MovieModelDto> getMovieById(final Integer idMovie) throws DataValidationException {
+        if (idMovie > 0) {
+            if (movieService.findById(idMovie).isPresent()) {
+                MovieModelDto response = movieService.getMovieDtoById(idMovie);
+
+                if (response != null) {
+                    return ResponseEntity.ok().body(response);
+                } else {
+                    return ResponseEntity.noContent().build();
+                }
+            } else {
+                return ResponseEntity.noContent().build();
+            }
+        } else {
+            throw new DataValidationException("Movie Id must be positive");
+        }
+    }
+
 //podes usar
 //getMoviesByCharacterId
 //getAllMovieResume
@@ -143,7 +162,7 @@ public class MovieController {
             try {
                 MovieModel movie = movieService.findByTittle(tittle);
                 if (movie == null) {
-                    return ResponseEntity.notFound().build();
+                    return ResponseEntity.noContent().build();
                 } else {
                     return ResponseEntity.ok().body(movie);
                 }

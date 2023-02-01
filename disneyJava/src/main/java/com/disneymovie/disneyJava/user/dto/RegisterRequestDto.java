@@ -1,5 +1,6 @@
 package com.disneymovie.disneyJava.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ public class RegisterRequestDto {
     String email;
     String password;
 
+    @JsonIgnore
     public boolean isValid() {
         return userRoleId > 0 && userRoleId < 3 &&
                 !StringUtils.isBlank(email) &&

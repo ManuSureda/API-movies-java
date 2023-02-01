@@ -51,7 +51,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(RegisterRequestDto registerRequestDto) throws JpaSystemException, DataValidationException, URISyntaxException, UserAllReadyExistException {
+    public ResponseEntity<User> register(@RequestBody RegisterRequestDto registerRequestDto) throws JpaSystemException, DataValidationException, URISyntaxException, UserAllReadyExistException {
+
         if (registerRequestDto.isValid()) {
             try {
                 Integer newID = userService.register(registerRequestDto);

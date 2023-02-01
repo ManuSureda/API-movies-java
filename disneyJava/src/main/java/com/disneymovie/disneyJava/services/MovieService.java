@@ -135,6 +135,29 @@ public class MovieService {
         return newID;
     }
 
+    public MovieModelDto getMovieDtoById(Integer idMovie) {
+        if (findById(idMovie).isPresent()) {
+            MovieModel model = findById(idMovie).get();
+
+            MovieModelDto response = new MovieModelDto();
+            response.setIdMovie(model.getIdMovie());
+            response.setScore(model.getScore());
+            response.setImgUrl(model.getImgUrl());
+            response.setTittle(model.getTittle());
+            response.setReleaseDate(model.getReleaseDate());
+
+            List<MovieGenreModel> genres = getGenresModelByMovieId(response.getIdMovie());
+            response.setGenres(genres);
+
+            List<CharacterModel> characters = getCharactersModelByMovieId(response.getIdMovie());
+            response.setCharacters(characters);
+
+            return response;
+        } else {
+            return null;
+        }
+    }
+
     public List<CharacterModel> getCharactersModelByMovieId(Integer newMovieId) {
         return characterRepository.findByMovieId(newMovieId);
     }

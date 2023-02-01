@@ -23,13 +23,12 @@ public class AdminSessionFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String sessionToken = request.getHeader("Authorization");
-//        System.out.println("--------------------");
-//        System.out.println("admin?");
-//        System.out.println(request.getHeader("Authorization"));
-//        System.out.println("--------------------");
         Session session = sessionManager.getSession(sessionToken);
 
 //         && session.getLoggedUser().getUserRole().equals(UserRole.admin)
+//        String url = ((HttpServletRequest)request).getRequestURL().toString(); <-- podria ver la url y pedirle x permiso?
+//        System.out.println(url);
+
         if (null != session) {
             filterChain.doFilter(request, response);
         } else {

@@ -39,12 +39,11 @@ public class Configuration {
     public FilterRegistrationBean myFilterAdmin() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(adminSessionFilter);
-        System.out.println("hoola");
         registration.addUrlPatterns("/movies/*");
         registration.addUrlPatterns("/movies/*/");
         registration.addUrlPatterns("/characters/*");
         registration.addUrlPatterns("/characters/*/");
-        registration.addUrlPatterns("/auth/register");
+//        registration.addUrlPatterns("/auth/register");
 
         return registration;
     }
