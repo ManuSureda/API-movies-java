@@ -30,13 +30,13 @@ public class MovieController {
 
     //    5. Detalle de Personaje
 //    Deberá mostrares el detalle de las películas en las que haya participado un personaje.
-    @GetMapping("/characters/{idMovie}")
-    public ResponseEntity<List<MovieModelDto>> getMoviesByCharacterId(@PathVariable("idMovie") final Integer idMovie) throws DataValidationException {
-        if (idMovie > 0) {
-            if (movieService.getMoviesByCharacterId(idMovie).isEmpty()) {
+    @GetMapping(params = { "idCharacter" })
+    public ResponseEntity<List<MovieModelDto>> getMoviesByCharacterId(final Integer idCharacter) throws DataValidationException {
+        if (idCharacter > 0) {
+            if (movieService.getMoviesByCharacterId(idCharacter).isEmpty()) {
                 return ResponseEntity.noContent().build();
             } else {
-                return ResponseEntity.ok().body(movieService.getMoviesByCharacterId(idMovie));
+                return ResponseEntity.ok().body(movieService.getMoviesByCharacterId(idCharacter));
             }
         } else {
             throw new DataValidationException("Character ID must be positive");
@@ -50,11 +50,10 @@ public class MovieController {
     @GetMapping()
     public ResponseEntity<List<MovieProjection>> getAllMovieResume() throws SQLException {
         try {
-            List<MovieProjection> response = movieService.getAllMovieResume();
-            if (response.isEmpty()) {
+            if (movieService.getAllMovieResume().isEmpty()) {
                 return ResponseEntity.noContent().build();
             } else {
-                return ResponseEntity.ok().body(response);
+                return ResponseEntity.ok().body(movieService.getAllMovieResume());
             }
         } catch (JpaSystemException e) {
             throw new SQLException(e.getCause().getCause().getMessage());
@@ -66,11 +65,10 @@ public class MovieController {
     @GetMapping("/characters")
     public ResponseEntity<List<MovieModelDto>> getAllMoviesAndCharacters() throws SQLException {
         try {
-            List<MovieModelDto> response = movieService.getAllMoviesAndCharacters();
-            if (response.isEmpty()) {
+            if (movieService.getAllMoviesAndCharacters().isEmpty()) {
                 return ResponseEntity.noContent().build();
             } else {
-                return ResponseEntity.ok().body(response);
+                return ResponseEntity.ok().body(movieService.getAllMoviesAndCharacters());
             }
         } catch (JpaSystemException e) {
             throw new SQLException(e.getCause().getCause().getMessage());
@@ -80,7 +78,7 @@ public class MovieController {
 //    9. CRUD peliculas / serie
 //CREATE
     @PostMapping()
-    public ResponseEntity<MovieModelDto> createMovie(@RequestBody MovieModelDto newMovie) throws DataValidationException, SQLException {
+    public ResponseEntity<MovieModelDto> createMovie(@RequestBody MovieModelDto newMovie) throws DataValidationException, SQLException, URISyntaxException {
         if (newMovie.isValid()) {
             try {
                 Integer newMovieId = movieService.createMovie(newMovie);
@@ -94,8 +92,6 @@ public class MovieController {
                 return ResponseEntity.created(new URI("http://localhost:8080/movies/"+newMovieId)).body(newMovie);
             } catch (JpaSystemException e) {
                 throw new SQLException(e.getCause().getCause().getMessage());
-            } catch (URISyntaxException e) {
-                throw new DataValidationException(e.getMessage());
             }
         } else {
             throw new DataValidationException("Some parameters are null, empty, blank or wrong");
@@ -106,14 +102,8 @@ public class MovieController {
     @GetMapping(params = {"idMovie"})
     public ResponseEntity<MovieModelDto> getMovieById(final Integer idMovie) throws DataValidationException {
         if (idMovie > 0) {
-            if (movieService.findById(idMovie).isPresent()) {
-                MovieModelDto response = movieService.getMovieDtoById(idMovie);
-
-                if (response != null) {
-                    return ResponseEntity.ok().body(response);
-                } else {
-                    return ResponseEntity.noContent().build();
-                }
+            if (movieService.getMovieDtoById(idMovie) != null) {
+                return ResponseEntity.ok().body(movieService.getMovieDtoById(idMovie));
             } else {
                 return ResponseEntity.noContent().build();
             }
@@ -129,12 +119,16 @@ public class MovieController {
 
 //    UPDATE
     @PutMapping("/")
-    public ResponseEntity<?> updateMovie(@RequestBody final MovieModelDto movieModified) throws SQLException {
-        try {
-            movieService.updateMovie(movieModified);
-            return ResponseEntity.accepted().build();
-        } catch (JpaSystemException e) {
-            throw new SQLException(e.getCause().getCause().getMessage());
+    public ResponseEntity<?> updateMovie(@RequestBody final MovieModelDto movieModified) throws SQLException, DataValidationException {
+        if (movieModified.isValid()) {
+            try {
+                movieService.updateMovie(movieModified);
+                return ResponseEntity.accepted().build();
+            } catch (JpaSystemException e) {
+                throw new SQLException(e.getCause().getCause().getMessage());
+            }
+        } else {
+            throw new DataValidationException("Some parameters are wrong on the modified movie");
         }
     }
 
@@ -160,11 +154,10 @@ public class MovieController {
     public ResponseEntity<MovieModel> findByName(@RequestParam String tittle) throws DataValidationException, SQLException {
         if (!StringUtils.isBlank(tittle)) {
             try {
-                MovieModel movie = movieService.findByTittle(tittle);
-                if (movie == null) {
+                if (movieService.findByTittle(tittle) == null) {
                     return ResponseEntity.noContent().build();
                 } else {
-                    return ResponseEntity.ok().body(movie);
+                    return ResponseEntity.ok().body(movieService.findByTittle(tittle));
                 }
             } catch (JpaSystemException e) {
                 throw new SQLException(e.getCause().getCause().getMessage());

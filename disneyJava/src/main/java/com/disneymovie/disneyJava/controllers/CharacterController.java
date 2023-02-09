@@ -2,6 +2,7 @@ package com.disneymovie.disneyJava.controllers;
 
 import com.disneymovie.disneyJava.exceptions.DataValidationException;
 import com.disneymovie.disneyJava.dtos.CharacterModelDto;
+import com.disneymovie.disneyJava.exceptions.ElementDoesNotExistException;
 import com.disneymovie.disneyJava.models.CharacterModel;
 import com.disneymovie.disneyJava.models.MovieModel;
 import com.disneymovie.disneyJava.projections.CharacterProjection;
@@ -9,6 +10,7 @@ import com.disneymovie.disneyJava.services.CharacterService;
 import com.disneymovie.disneyJava.services.MovieService;
 import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.*;
@@ -39,12 +41,16 @@ public class CharacterController {
 //    El endpoint deberá ser:
 //            •	/characters
     @GetMapping()
-    public ResponseEntity<List<CharacterProjection>> resumeAllCharacters() {
-        List<CharacterProjection> response = this.characterService.resumeAllCharacters();
-        if (response.isEmpty()){
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok().body(response);
+    public ResponseEntity<List<CharacterProjection>> resumeAllCharacters() throws SQLException {
+        try {
+            List<CharacterProjection> response = this.characterService.resumeAllCharacters();
+            if (response.isEmpty()){
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.ok().body(response);
+            }
+        } catch (JpaSystemException e) {
+            throw new SQLException(e.getCause().getCause().getMessage());
         }
     }
 
@@ -101,13 +107,16 @@ public class CharacterController {
     }
 //eliminacion
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCharacterById(@PathVariable("id") final Integer id) throws DataValidationException, SQLException {
+    public ResponseEntity<?> deleteCharacterById(@PathVariable("id") final Integer id) throws DataValidationException, SQLException, ElementDoesNotExistException {
         if (id > 0) {
             try {
                 characterService.deleteCharacterById(id);
                 return ResponseEntity.ok().build();
             } catch (JpaSystemException e) {
                 throw new SQLException(e.getCause().getCause().getMessage());
+            } catch (EmptyResultDataAccessException e) {
+                //el 204 no content ya se encarga solo
+                throw new ElementDoesNotExistException("There is no character with that ID");
             }
         } else {
             throw new DataValidationException("Character ID must be positive");
@@ -192,7 +201,4 @@ public class CharacterController {
             throw new DataValidationException("The Movie ID must be positive");
         }
     }
-
-
-
 }

@@ -19,7 +19,7 @@ import java.util.List;
 @Repository
 public interface CharacterRepository extends JpaRepository<CharacterModel, Integer> {
     @Query(value = "select * from v_characters", nativeQuery = true)
-    List<CharacterProjection> resumeAllCharacters();
+    List<CharacterProjection> resumeAllCharacters() throws JpaSystemException;
 
     @Procedure(procedureName = "sp_create_character")
     Integer createCharacter(@Param("pImgUrl") String imgUrl,

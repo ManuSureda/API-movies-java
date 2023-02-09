@@ -21,7 +21,7 @@ public class CharacterService {
 
     public CharacterService(CharacterRepository characterRepository) { this.characterRepository = characterRepository; }
 
-    public List<CharacterProjection> resumeAllCharacters() {
+    public List<CharacterProjection> resumeAllCharacters() throws JpaSystemException {
         return this.characterRepository.resumeAllCharacters();
     }
 
@@ -37,7 +37,6 @@ public class CharacterService {
 
         if (newIdCharacter != null) {
             if (!newCharacter.getMovieIdList().isEmpty()) {
-                System.out.println(newCharacter.getMovieIdList());
                 for (Integer movieId: newCharacter.getMovieIdList()) {
                     addMoviesToCharacter((Integer) movieId,newIdCharacter);
                 }
@@ -53,7 +52,7 @@ public class CharacterService {
         characterRepository.addMoviesToCharacter(movieId,newIdCharacter);
     }
 
-    public void updateCharacter(CharacterModelDto modifiedCharacter) {
+    public void updateCharacter(CharacterModelDto modifiedCharacter) throws JpaSystemException {
         characterRepository.updateCharacter(
                 modifiedCharacter.getIdCharacter(),
                 modifiedCharacter.getImgUrl(),
@@ -64,14 +63,13 @@ public class CharacterService {
         );
     }
 
-    public void deleteCharacterById(Integer id) {
+    public void deleteCharacterById(Integer id) throws JpaSystemException {
         characterRepository.deleteById(id);
     }
 
     public Optional<CharacterModel> findById(Integer id) {
         return characterRepository.findById(id);
     }
-
 
     public CharacterModel findByName(String name) {
         return characterRepository.findByName(name);

@@ -1,6 +1,6 @@
 package com.disneymovie.disneyJava.user.services;
 
-import com.disneymovie.disneyJava.exceptions.UserNotExistException;
+import com.disneymovie.disneyJava.exceptions.ElementDoesNotExistException;
 import com.disneymovie.disneyJava.user.dto.LoginRequestDto;
 import com.disneymovie.disneyJava.user.dto.RegisterRequestDto;
 import com.disneymovie.disneyJava.user.model.User;
@@ -19,9 +19,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User login(LoginRequestDto login) throws UserNotExistException {
+    public User login(LoginRequestDto login) throws ElementDoesNotExistException {
         User user = userRepository.getByEmail(login.getEmail(), login.getPassword());
-        return Optional.ofNullable(user).orElseThrow(() -> new UserNotExistException("User not exist"));
+        return Optional.ofNullable(user).orElseThrow(() -> new ElementDoesNotExistException("User not exist"));
     }
 
     public Integer register(RegisterRequestDto registerRequestDto) throws JpaSystemException {

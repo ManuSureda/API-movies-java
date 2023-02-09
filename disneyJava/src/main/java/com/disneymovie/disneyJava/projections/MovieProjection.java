@@ -15,4 +15,10 @@ public interface MovieProjection {
     String getTittle();
     @JsonInclude(JsonInclude.Include.NON_NULL)
     Date getRelease_date();
+
+    void setIdMovie(Integer idMovie);
+    void setScore(Integer score);
+    void setImg_url(String img_url);
+    void setTittle(String tittle);
+    void setRelease_date(Date release_date);
 }

@@ -4,7 +4,7 @@ import com.disneymovie.disneyJava.dtos.ErrorResponseDto;
 import com.disneymovie.disneyJava.exceptions.DataValidationException;
 import com.disneymovie.disneyJava.exceptions.InvalidLoginException;
 import com.disneymovie.disneyJava.exceptions.UserAllReadyExistException;
-import com.disneymovie.disneyJava.exceptions.UserNotExistException;
+import com.disneymovie.disneyJava.exceptions.ElementDoesNotExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,19 +35,19 @@ public class ControllerAdvice {
 
     @ExceptionHandler(value = {InvalidLoginException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorResponseDto handleDataValidationException(InvalidLoginException e) {
+    public ErrorResponseDto handleInvalidLoginException(InvalidLoginException e) {
         return new ErrorResponseDto(4, e.getMessage());
     }
 
     @ExceptionHandler(value = {UserAllReadyExistException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorResponseDto handleDataValidationException(UserAllReadyExistException e) {
+    public ErrorResponseDto handleUserAllReadyExistException(UserAllReadyExistException e) {
         return new ErrorResponseDto(5, e.getMessage());
     }
 
-    @ExceptionHandler(value = {UserNotExistException.class})
+    @ExceptionHandler(value = {ElementDoesNotExistException.class})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public ErrorResponseDto handleDataValidationException(UserNotExistException e) {
+    public ErrorResponseDto handleElementDoesNotExistException(ElementDoesNotExistException e) {
         return new ErrorResponseDto(6, e.getMessage());
     }
 

@@ -4,7 +4,6 @@ import com.disneymovie.disneyJava.dtos.MovieModelDto;
 import com.disneymovie.disneyJava.models.CharacterModel;
 import com.disneymovie.disneyJava.models.MovieGenreModel;
 import com.disneymovie.disneyJava.models.MovieModel;
-import com.disneymovie.disneyJava.projections.CharacterProjection;
 import com.disneymovie.disneyJava.projections.MovieGenreProjection;
 import com.disneymovie.disneyJava.projections.MovieProjection;
 import com.disneymovie.disneyJava.repositories.CharacterRepository;
@@ -32,8 +31,8 @@ public class MovieService {
         return movieRepository.findById(id);
     }
 
-    public List<MovieModelDto> getMoviesByCharacterId(Integer idMovie) {
-        List<MovieModel> resultSet = movieRepository.getMoviesByCharacterId(idMovie);
+    public List<MovieModelDto> getMoviesByCharacterId(Integer idCharacter) {
+        List<MovieModel> resultSet = movieRepository.getMoviesByCharacterId(idCharacter);
         List<MovieGenreProjection> genresResulSet = new ArrayList<>();
         ArrayList<MovieModelDto> response = new ArrayList<>();
         MovieModelDto dto = new MovieModelDto();

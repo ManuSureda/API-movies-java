@@ -4,7 +4,7 @@ package com.disneymovie.disneyJava.user.controller;
 import com.disneymovie.disneyJava.exceptions.DataValidationException;
 import com.disneymovie.disneyJava.exceptions.InvalidLoginException;
 import com.disneymovie.disneyJava.exceptions.UserAllReadyExistException;
-import com.disneymovie.disneyJava.exceptions.UserNotExistException;
+import com.disneymovie.disneyJava.exceptions.ElementDoesNotExistException;
 import com.disneymovie.disneyJava.user.dto.LoginRequestDto;
 import com.disneymovie.disneyJava.user.dto.RegisterRequestDto;
 import com.disneymovie.disneyJava.user.model.User;
@@ -42,8 +42,8 @@ public class UserController {
                 User u = userService.login(loginRequestDto);
                 String token = sessionManager.createSession(u);
                 return ResponseEntity.ok().headers(createHeaders(token)).build();
-            } catch (UserNotExistException e) {
-                throw new InvalidLoginException(e);
+            } catch (ElementDoesNotExistException e) {
+                throw new InvalidLoginException("Email or password are wrong");
             }
         } else {
             throw new ValidationException("username and password must have a value");
@@ -85,7 +85,6 @@ public class UserController {
         if (id > 0) {
             try {
                 Optional<User> u = userService.findById(id);
-                System.out.println(u);
                 if (u.isPresent()) {
                     return ResponseEntity.ok().body(u.get());
                 } else {

@@ -1,0 +1,546 @@
+{
+	"info": {
+		"_postman_id": "20de2d76-bcbe-4c17-85b3-1c07061993e6",
+		"name": "disneyJAVA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11176951"
+	},
+	"item": [
+		{
+			"name": "CHARACTERS",
+			"item": [
+				{
+					"name": "4) - CRUD",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "14a9e4c7-3f4e-45a9-9b10-d2cd53a76bad",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"imgUrl\" : \"aaaa\",\r\n    \"name\": \"nuevo\",\r\n    \"age\": 10,\r\n    \"weight\": 2,\r\n    \"story\": \"es un nuevo personaje\",\r\n    \"movieIdList\": [1,2,3]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/characters",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"characters"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "read (by id)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "14a9e4c7-3f4e-45a9-9b10-d2cd53a76bad",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/characters/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"characters",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "14a9e4c7-3f4e-45a9-9b10-d2cd53a76bad",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"idCharacter\": 1,\r\n    \"imgUrl\": \"k\",\r\n    \"name\": \"Manny\",\r\n    \"age\": 30,\r\n    \"weight\": 500,\r\n    \"story\": \"Es un Mamut lanudo, muy malhumorado y modificado\",\r\n    \"valid\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/characters/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"characters",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete (by id)",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "14a9e4c7-3f4e-45a9-9b10-d2cd53a76bad",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/characters/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"characters",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "3) - listado de personajes (imagen y nombre)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "14a9e4c7-3f4e-45a9-9b10-d2cd53a76bad",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/characters",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"characters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6) - findByName/Age/Weight (una a la vez)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "14a9e4c7-3f4e-45a9-9b10-d2cd53a76bad",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/characters?weight=50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"characters"
+							],
+							"query": [
+								{
+									"key": "weight",
+									"value": "50"
+								},
+								{
+									"key": "age",
+									"value": "30",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "Diego",
+									"disabled": true
+								},
+								{
+									"key": "idMovie",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "MOVIE",
+			"item": [
+				{
+					"name": "9) - CRUD",
+					"item": [
+						{
+							"name": "create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "14a9e4c7-3f4e-45a9-9b10-d2cd53a76bad",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"imgUrl\": \"IMGURL\",\r\n    \"tittle\": \"new movie\",\r\n    \"releaseDate\": \"2022-02-02\",\r\n    \"score\": 1,\r\n    \"movieGenres\": [1, 2, 3]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/movies/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"movies",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "read (by id)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "81a0908b-51c4-4c3d-956b-f55575a2f339",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/movies?idMovie=2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"movies"
+									],
+									"query": [
+										{
+											"key": "idMovie",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "81a0908b-51c4-4c3d-956b-f55575a2f339",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"idMovie\": 14,\r\n    \"imgUrl\": \"img update\",\r\n    \"tittle\": \"new movie update\",\r\n    \"releaseDate\": \"2022-02-02T00:00:00.000+00:00\",\r\n    \"score\": 2\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/movies/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"movies",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "81a0908b-51c4-4c3d-956b-f55575a2f339",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8080/movies/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"movies",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "5) - movies by character (id character)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "14a9e4c7-3f4e-45a9-9b10-d2cd53a76bad",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/movies/characters/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies",
+								"characters",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7) - movie list resume (imagen, titulo y fecha de estreno)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "f3a9d3e1-a884-4821-8e35-7044c83cd75e",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/movies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8) - movies  +  characters",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "14a9e4c7-3f4e-45a9-9b10-d2cd53a76bad",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/movies/characters",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies",
+								"characters"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10) - findByTittle/GenreID/ASC|DESC",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "81a0908b-51c4-4c3d-956b-f55575a2f339",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/movies?order=DESC",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movies"
+							],
+							"query": [
+								{
+									"key": "tittle",
+									"value": "La era de hielo",
+									"disabled": true
+								},
+								{
+									"key": "genreId",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "ASC",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "DESC"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2) - USER",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userRoleId\": 1,\r\n    \"email\": \"nuevo@nuevo.com\",\r\n    \"password\": \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

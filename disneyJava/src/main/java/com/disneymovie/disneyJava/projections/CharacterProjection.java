@@ -15,4 +15,11 @@ public interface CharacterProjection {
     String getName();
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String getStory();
+
+    void setId_character(Integer id_character);
+    void setAge(Integer age);
+    void setWeight(Integer weight);
+    void setImg_url(String img_url);
+    void setName(String name);
+    void setStory(String story);
 }
