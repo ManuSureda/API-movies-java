@@ -101,8 +101,10 @@ public class UserController {
     private HttpHeaders createHeaders(String token) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Authorization", token);
+        responseHeaders.set("Access-Control-Allow-Origin", "http://localhost:4200");
         return responseHeaders;
     }
+
 
 }
 
