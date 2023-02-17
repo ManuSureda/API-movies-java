@@ -24,7 +24,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class UserController {
     private final SessionManager sessionManager;
     private final UserService userService;
@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDto loginRequestDto) throws InvalidLoginException, ValidationException {
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) throws InvalidLoginException, ValidationException {
         if (loginRequestDto.isValid()) {
             try {
                 User u = userService.login(loginRequestDto);
@@ -75,7 +75,7 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity logout(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String token) {
         sessionManager.removeSession(token);
         return ResponseEntity.ok().build();
     }
