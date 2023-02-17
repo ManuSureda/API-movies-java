@@ -41,7 +41,8 @@ public class UserController {
             try {
                 User u = userService.login(loginRequestDto);
                 String token = sessionManager.createSession(u);
-                return ResponseEntity.ok().headers(createHeaders(token)).build();
+                ResponseEntity<?> response = ResponseEntity.ok().headers(createHeaders(token)).build();
+                return response;
             } catch (ElementDoesNotExistException e) {
                 throw new InvalidLoginException("Email or password are wrong");
             }
