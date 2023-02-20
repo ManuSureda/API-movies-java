@@ -7,6 +7,7 @@ import com.disneymovie.disneyJava.projections.MovieProjection;
 import com.disneymovie.disneyJava.services.MovieService;
 import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.*;
@@ -78,7 +79,7 @@ public class MovieController {
 //    9. CRUD peliculas / serie
 //CREATE
     @PostMapping()
-    public ResponseEntity<MovieModelDto> createMovie(@RequestBody MovieModelDto newMovie) throws DataValidationException, SQLException, URISyntaxException {
+    public ResponseEntity<MovieModelDto> createMovie(@RequestBody final MovieModelDto newMovie) throws DataValidationException, SQLException, URISyntaxException {
         if (newMovie.isValid()) {
             try {
                 Integer newMovieId = movieService.createMovie(newMovie);
@@ -90,8 +91,8 @@ public class MovieController {
                 newMovie.setCharacters(movieService.getCharactersModelByMovieId(newMovieId));
 
                 return ResponseEntity.created(new URI("http://localhost:8080/movies/"+newMovieId)).body(newMovie);
-            } catch (JpaSystemException e) {
-                throw new SQLException(e.getCause().getCause().getMessage());
+            } catch (DataIntegrityViolationException e) {
+                throw new DataValidationException("The movie was created, but some of the ID movies genres are not present in the database");
             }
         } else {
             throw new DataValidationException("Some parameters are null, empty, blank or wrong");
@@ -151,7 +152,7 @@ public class MovieController {
 //    El termino de búsqueda, filtro u ordenación se deberán especificar como parámetros query:
 //•	/movies?name=nombre
     @GetMapping(params = {"tittle"})
-    public ResponseEntity<MovieModel> findByName(@RequestParam String tittle) throws DataValidationException, SQLException {
+    public ResponseEntity<MovieModel> findByTittle(@RequestParam String tittle) throws DataValidationException, SQLException {
         if (!StringUtils.isBlank(tittle)) {
             try {
                 if (movieService.findByTittle(tittle) == null) {

@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
-import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -33,12 +33,12 @@ public interface MovieRepository extends JpaRepository<MovieModel, Integer> {
             @Param("pTittle") String tittle,
             @Param("pReleaseDate") Date releaseDate,
             @Param("pScore") Integer score
-    ) throws JpaSystemException;
+    ) throws SQLException;
 
     @Transactional
     @Modifying
     @Query(value = "insert into genre_x_movie (id_movie, id_movie_genre) values (?, ?)", nativeQuery = true)
-    void addGenreToMovie(Integer newID, Integer idMovieGenre);
+    void addGenreToMovie(Integer newID, Integer idMovieGenre) throws SQLException;
 
 
     @Transactional

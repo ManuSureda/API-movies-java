@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -267,7 +268,7 @@ public class MovieServiceTest {
     }
 
     @Test
-    void createMovieTest() {
+    void createMovieTest() throws SQLException {
         Date date = new Date();
         when(movieRepository.createMovie("i","t",date,1)).thenReturn(1);
         MovieModelDto dto = new MovieModelDto();
@@ -286,14 +287,14 @@ public class MovieServiceTest {
     }
 
     @Test
-    void createMovieNullIdTest() {
+    void createMovieNullIdTest() throws SQLException {
         Date date = new Date();
         when(movieRepository.createMovie("i","t",date,1)).thenReturn(null);
         Assertions.assertEquals(0,movieService.createMovie(new MovieModelDto()));
     }
 
     @Test
-    void createMovieGenresEmptyTest() {
+    void createMovieGenresEmptyTest() throws SQLException {
         Date date = new Date();
         when(movieRepository.createMovie("i","t",date,1)).thenReturn(1);
         MovieModelDto dto = new MovieModelDto();

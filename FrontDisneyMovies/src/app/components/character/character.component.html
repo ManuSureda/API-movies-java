@@ -1,1 +1,85 @@
-<p>character works!</p>
+<br><br><br>
+
+<div *ngIf="alertMessage" class="alert alert-danger d-flex justify-content-center">
+  <h5>{{ alertMessage }}</h5>
+</div>
+
+<div>
+  <div class=" w3-card w3-border-bottom w3-border-light-grey">
+    <div class="w3-left w3-hide-small w3-border-bottom w3-border-light-grey">
+      <h3 class="w3-bar-item w3-button w3-border-light-grey" (click)="ngOnInit()" style="cursor: pointer;">Characters</h3>
+      <h3 class="w3-bar-item w3-button w3-border-light-grey" (click)="createCharacter()" style="cursor: pointer;">Create Character</h3>
+      <h3 class="w3-bar-item w3-button w3-border-light-grey" (click)="createCharacter()" style="cursor: pointer;">Characters 3</h3>
+  
+    </div>
+  </div>
+</div>
+<br><br><br>
+
+<div class="w3-row-padding">
+  
+  <div class="w3-col l3 m6 w3-margin-bottom" *ngFor="let characterResume of charactersResumeArray">
+    <div class="w3-display-container">
+      <div style="cursor: pointer;" (click)="showCharacterByName(characterResume.getName())" class="w3-display-topleft w3-black w3-padding">{{ characterResume.getName() }}</div>
+      <img style="cursor: pointer;" (click)="showCharacterByName(characterResume.getName())" src="{{ characterResume.getImgUrl() }}" alt="Movie" style="width:100%">
+    </div>
+  </div>
+
+</div>
+
+
+<!-- show specific character and update it -->
+<div class="w3-row-padding " *ngIf="character != undefined">
+  <div class="w3-col l3 m6 w3-margin-bottom">
+    <img src="{{ character.getImgUrl() }}" alt="character poster" style="width:100%">
+    <h3>{{ character.getName() }}</h3>
+    <h6 class="w3-opacity">Age: {{ character.getAge() }}</h6>
+    <h6 class="w3-opacity">Weight: {{ character.getWeight() }}</h6>
+    <p>{{ character.getStory() }}</p>
+    <p><button (click)="updateCharacter()" class="w3-button w3-grey w3-block">Update</button></p>
+    <p><button (click)="deleteCharacterById(character.getIdCharacter())" class="w3-button w3-red w3-block">Delete</button></p>
+  </div>
+  <div class="w3-container w3-padding-32" *ngIf="flagUpdate == true" style="display: inline-block;">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Update Character</h3>
+    <p>Enter all the modified data, the fields not completed will remain as before</p>
+    <form [formGroup]="updateForm" (ngSubmit)="updateSubmit()" target="_blank">
+      <input formControlName="uName" class="w3-input w3-section w3-border" type="text" placeholder="Name">
+      <input formControlName="uAge" class="w3-input w3-section w3-border" type="text" placeholder="Age">
+      <input formControlName="uWeight" class="w3-input w3-section w3-border" type="text" placeholder="Weight">
+      <input formControlName="uStory" class="w3-input w3-section w3-border" type="text" placeholder="Story">
+
+      <button class="w3-button w3-black w3-section" type="submit" [disabled]="updateForm.invalid">
+        <i class="fa fa-paper-plane"></i> Update
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- create character -->
+<div class="w3-container w3-padding-32" *ngIf="flagCreate == true" style="display: inline-block;">
+  <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Create Character</h3>
+  <p>please make sure to fill in each field, name and poster path cannot start with empty spaces and age and weight must be greater than 0</p>
+  <form [formGroup]="createForm" (ngSubmit)="createSubmit()" target="_blank">
+    <input formControlName="cName"    class="w3-input w3-section w3-border" type="text" placeholder="Name">
+    <input formControlName="cAge"     class="w3-input w3-section w3-border" type="text" placeholder="Age">
+    <input formControlName="cWeight"  class="w3-input w3-section w3-border" type="text" placeholder="Weight">
+    <input formControlName="cStory"   class="w3-input w3-section w3-border" type="text" placeholder="Story">
+    <input formControlName="cImgUrl"  class="w3-input w3-section w3-border" type="text" placeholder="Poster path">
+
+    <button class="w3-button w3-black w3-section" type="submit" [disabled]="createForm.invalid">
+      <i class="fa fa-paper-plane"></i> Create
+    </button>
+  </form>
+  <div *ngIf="cName.invalid && (cName.dirty || cName.touched)" class="alert">
+    <div *ngIf="cName.errors?.required" class="alert alert-danger">
+        Name is required.
+    </div>
+    <div *ngIf="cName.errors?.hasLeadingSpace" class="alert alert-danger">
+        Name cannot have a leading space.
+    </div>
+    <div *ngIf="cName.errors?.characterNameExist" class="alert alert-danger">
+        There is already a character with that name.
+    </div>
+  </div>
+</div>
+

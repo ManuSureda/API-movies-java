@@ -9,8 +9,11 @@ import com.disneymovie.disneyJava.projections.MovieProjection;
 import com.disneymovie.disneyJava.repositories.CharacterRepository;
 import com.disneymovie.disneyJava.repositories.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -104,7 +107,8 @@ public class MovieService {
         return response;
     }
 
-    public Integer createMovie(MovieModelDto newMovie) {
+    public Integer createMovie(MovieModelDto newMovie) throws SQLException, JpaSystemException, DataIntegrityViolationException {
+
         Integer newID = movieRepository.createMovie(
                 newMovie.getImgUrl(),
                 newMovie.getTittle(),
@@ -112,13 +116,11 @@ public class MovieService {
                 newMovie.getScore()
         );
 
-        if (newID != null) {
+        if (newID > 0) {
             if (!newMovie.getGenresIdList().isEmpty()) {
                 for (Integer genreId: newMovie.getGenresIdList()) {
-                    movieRepository.addGenreToMovie(
-                            newID,
-                            genreId
-                    );
+                    movieRepository.addGenreToMovie(newID, genreId
+                    );// aca es donde se puede generar un DataIntegrityViolationException que serea cacheado en la controller
                 }
             }
 

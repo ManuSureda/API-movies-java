@@ -1,6 +1,5 @@
 package com.disneymovie.disneyJava.repositories;
 
-import com.disneymovie.disneyJava.dtos.CharacterModelDto;
 import com.disneymovie.disneyJava.models.CharacterModel;
 import com.disneymovie.disneyJava.projections.CharacterProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -27,7 +25,7 @@ public interface CharacterRepository extends JpaRepository<CharacterModel, Integ
                             @Param("pAge") Integer age,
                             @Param("pWeight") Integer weight,
                             @Param("pStory") String story
-    ) throws JpaSystemException;
+    ) throws SQLException;
 
     @Transactional
     @Modifying
@@ -41,14 +39,14 @@ public interface CharacterRepository extends JpaRepository<CharacterModel, Integ
                          @Param("pAge") Integer age,
                          @Param("pWeight") Integer weight,
                          @Param("pStory") String story
-    ) throws JpaSystemException;
+    ) throws SQLException;
 
-    CharacterModel findByName(String name);
+    CharacterModel findByName(String name) throws JpaSystemException;
 
-    List<CharacterModel> findByAge(Integer age);
+    List<CharacterModel> findByAge(Integer age) throws JpaSystemException;
 
-    List<CharacterModel> findByWeight(Integer weight);
+    List<CharacterModel> findByWeight(Integer weight) throws JpaSystemException;
 
     @Query(value = "select * from v_characters_by_movie_name where id_movie = ? group by name", nativeQuery = true)
-    List<CharacterModel> findByMovieId(Integer idMovie);
+    List<CharacterModel> findByMovieId(Integer idMovie) throws JpaSystemException;
 }

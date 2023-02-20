@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -16,7 +17,7 @@ export class LogInComponent implements OnInit {
     password: new FormControl('', [Validators.required])
   });
 
-  message = "";
+  alertMessage = "";
 
   constructor(private authService : AuthService, private router : Router) { }
 
@@ -38,13 +39,17 @@ export class LogInComponent implements OnInit {
           let redirect = this.authService.redirectUrl ? this.router.parseUrl(this.authService.redirectUrl) : '/movies';
           this.router.navigateByUrl(redirect);
         } else {
-          this.message = "Sorry, something went wrong, please try again";
+          this.alertMessage = "Incorrect email or password";
         }
       })
       .catch(err => {
         console.log(err);
-        this.message = "Incorrect email or password";
-      })
+        if (err instanceof HttpErrorResponse) {
+          this.alertMessage = "Sorry, it seems the server is down, please try again later";
+        } else {
+          this.alertMessage = "Sorry, something went wrong, please try again";
+        }
+      });
 
   }
 

@@ -35,7 +35,7 @@ public class CharacterService {
                 newCharacter.getStory()
         );
 
-        if (newIdCharacter != null) {
+        if (newIdCharacter > 0) {
             if (!newCharacter.getMovieIdList().isEmpty()) {
                 for (Integer movieId: newCharacter.getMovieIdList()) {
                     addMoviesToCharacter((Integer) movieId,newIdCharacter);
@@ -52,7 +52,7 @@ public class CharacterService {
         characterRepository.addMoviesToCharacter(movieId,newIdCharacter);
     }
 
-    public void updateCharacter(CharacterModelDto modifiedCharacter) throws JpaSystemException {
+    public void updateCharacter(CharacterModelDto modifiedCharacter) throws JpaSystemException, SQLException {
         characterRepository.updateCharacter(
                 modifiedCharacter.getIdCharacter(),
                 modifiedCharacter.getImgUrl(),

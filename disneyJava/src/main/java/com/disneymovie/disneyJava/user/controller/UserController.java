@@ -23,6 +23,7 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/auth")
 public class UserController {
@@ -41,7 +42,10 @@ public class UserController {
             try {
                 User u = userService.login(loginRequestDto);
                 String token = sessionManager.createSession(u);
-                ResponseEntity<?> response = ResponseEntity.ok().headers(createHeaders(token)).build();
+                ResponseEntity<?> response = ResponseEntity.ok()
+                        .headers(createHeaders(token))
+                        .build();
+//                System.out.println(response);
                 return response;
             } catch (ElementDoesNotExistException e) {
                 throw new InvalidLoginException("Email or password are wrong");
@@ -102,7 +106,6 @@ public class UserController {
     private HttpHeaders createHeaders(String token) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Authorization", token);
-        responseHeaders.set("Access-Control-Allow-Origin", "http://localhost:4200");
         return responseHeaders;
     }
 

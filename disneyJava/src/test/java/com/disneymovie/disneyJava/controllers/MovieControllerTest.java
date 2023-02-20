@@ -181,7 +181,7 @@ public class MovieControllerTest {
     }
 
     @Test
-    void createMovieTestJpaSystemException() {
+    void createMovieTestJpaSystemException() throws SQLException {
         MovieModelDto movieModelDto = new MovieModelDto();
         movieModelDto.setIdMovie(1);
         movieModelDto.setImgUrl("a");
@@ -295,12 +295,12 @@ public class MovieControllerTest {
     }
 
     @Test
-    void findByNameTestOk() throws DataValidationException, SQLException {
+    void findByTittleTestOk() throws DataValidationException, SQLException {
         MovieModel movieModel = new MovieModel(1,1,"","t",new Date());
 
         when(movieService.findByTittle("t")).thenReturn(movieModel);
 
-        ResponseEntity<MovieModel> response = movieController.findByName("t");
+        ResponseEntity<MovieModel> response = movieController.findByTittle("t");
 
         Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
         Assertions.assertEquals(movieModel, response.getBody());
@@ -308,24 +308,24 @@ public class MovieControllerTest {
     }
 
     @Test
-    void findByNameTestNoContent() throws DataValidationException, SQLException {
-        ResponseEntity<MovieModel> response = movieController.findByName("t");
+    void findByTittleTestNoContent() throws DataValidationException, SQLException {
+        ResponseEntity<MovieModel> response = movieController.findByTittle("t");
 
         Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(movieService, times(1)).findByTittle("t");
     }
 
     @Test
-    void findByNameTestJpaSystemException() {
+    void findByTittleTestJpaSystemException() {
         doThrow(new JpaSystemException(new RuntimeException(new SQLException())))
                 .when(movieService).findByTittle("t");
 
-        Assertions.assertThrows(SQLException.class, () -> movieController.findByName("t"));
+        Assertions.assertThrows(SQLException.class, () -> movieController.findByTittle("t"));
     }
 
     @Test
     void findByNameTestDataValidationException() {
-        Assertions.assertThrows(DataValidationException.class, () -> movieController.findByName(""));
+        Assertions.assertThrows(DataValidationException.class, () -> movieController.findByTittle(""));
     }
 
     @Test

@@ -27,10 +27,17 @@ public class Configuration {
     public FilterRegistrationBean myFilterClient() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(sessionFilter);
-        registration.addUrlPatterns("/movies/*");
-        registration.addUrlPatterns("/movies/*/");
-        registration.addUrlPatterns("/characters/*");
-        registration.addUrlPatterns("/characters/*/");
+        registration.addUrlPatterns("/api/movies*");
+        registration.addUrlPatterns("/api/movies/*");
+        registration.addUrlPatterns("/api/movies/*/");
+        registration.addUrlPatterns("/api/characters*");
+        registration.addUrlPatterns("/api/characters/*");
+        registration.addUrlPatterns("/api/characters/*/");
+
+//        registration.addUrlPatterns("/movies/*");
+//        registration.addUrlPatterns("/movies/*/");
+//        registration.addUrlPatterns("/characters/*");
+//        registration.addUrlPatterns("/characters/*/");
 
         return registration;
      }
@@ -39,10 +46,17 @@ public class Configuration {
     public FilterRegistrationBean myFilterAdmin() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(adminSessionFilter);
-        registration.addUrlPatterns("/movies/*");
-        registration.addUrlPatterns("/movies/*/");
-        registration.addUrlPatterns("/characters/*");
-        registration.addUrlPatterns("/characters/*/");
+        registration.addUrlPatterns("/api/movies*");
+        registration.addUrlPatterns("/api/movies/*");
+        registration.addUrlPatterns("/api/movies/*/");
+        registration.addUrlPatterns("/api/characters*");
+        registration.addUrlPatterns("/api/characters/*");
+        registration.addUrlPatterns("/api/characters/*/");
+
+//        registration.addUrlPatterns("/movies/*");
+//        registration.addUrlPatterns("/movies/*/");
+//        registration.addUrlPatterns("/characters/*");
+//        registration.addUrlPatterns("/characters/*/");
 //        registration.addUrlPatterns("/auth/register");
 
         return registration;

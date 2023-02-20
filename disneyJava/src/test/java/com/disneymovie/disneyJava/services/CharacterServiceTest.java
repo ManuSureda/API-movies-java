@@ -77,7 +77,7 @@ public class CharacterServiceTest {
     }
 
     @Test
-    void createCharacterTestDataValidationException() {
+    void createCharacterTestDataValidationException() throws SQLException {
         CharacterModelDto dto = new CharacterModelDto();
         dto.setImgUrl("a");
 
@@ -88,7 +88,7 @@ public class CharacterServiceTest {
     }
 
     @Test
-    void updateCharacterTest() {
+    void updateCharacterTest() throws SQLException {
         CharacterModelDto dto = new CharacterModelDto();
         dto.setIdCharacter(1);
         dto.setImgUrl("u");

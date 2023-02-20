@@ -10,6 +10,7 @@ import com.disneymovie.disneyJava.services.CharacterService;
 import com.disneymovie.disneyJava.services.MovieService;
 import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -50,6 +51,7 @@ public class CharacterController {
                 return ResponseEntity.ok().body(response);
             }
         } catch (JpaSystemException e) {
+//            el caso mas probable es que el resultado no se pueda mapear con un CharacterProjection
             throw new SQLException(e.getCause().getCause().getMessage());
         }
     }
@@ -60,18 +62,19 @@ public class CharacterController {
         if (newCharacterDto.isValid()) {
             try {
                 Integer newId = characterService.createCharacter(newCharacterDto);
+                newCharacterDto.setIdCharacter(newId);
+
                 ArrayList<MovieModel> movieModels = new ArrayList<>();
                 for (Integer movieId: newCharacterDto.getMovieIdList() ) {
                     if (movieService.findById(movieId).isPresent()) {
                         movieModels.add(movieService.findById(movieId).get());
                     }
                 }
-                newCharacterDto.setIdCharacter(newId);
                 newCharacterDto.setMovieIdList(null);
                 newCharacterDto.setMovieModelList(movieModels);
                 return ResponseEntity.created(new URI("http://localhost:8080/characters/"+newId)).body(newCharacterDto);
-            } catch (JpaSystemException | SQLException e) {
-                throw new SQLException(e.getCause().getCause().getMessage());
+            } catch (DataIntegrityViolationException e) {
+                throw new DataValidationException("The character was created, but some of the provided id movies are not present in the database.");
             }
         } else {
             throw new DataValidationException("Invalid new character information");
@@ -79,7 +82,7 @@ public class CharacterController {
     }
 // READ
     @GetMapping("/{id}")
-    public ResponseEntity<?> readCharacterById(@PathVariable("id") Integer id) throws DataValidationException {
+    public ResponseEntity<?> readCharacterById(@PathVariable("id") final Integer id) throws DataValidationException {
         if (id > 0) {
             if (characterService.findById(id).isPresent()) {
                 return ResponseEntity.ok().body(characterService.findById(id).get());
@@ -95,14 +98,18 @@ public class CharacterController {
     @PutMapping("/")
     public ResponseEntity<?> updateCharacter(@RequestBody final CharacterModelDto modifiedCharacter) throws SQLException, DataValidationException {
         if (modifiedCharacter.isValid()) {
-            try {
-                characterService.updateCharacter(modifiedCharacter);
-                return ResponseEntity.accepted().build();
-            } catch (JpaSystemException e) {
-                throw new SQLException(e.getCause().getCause().getMessage());
+            if (modifiedCharacter.getIdCharacter() > 0) {
+                try {
+                    characterService.updateCharacter(modifiedCharacter);
+                    return ResponseEntity.accepted().build();
+                } catch (JpaSystemException e) {
+                    throw new SQLException(e.getCause().getCause().getMessage());
+                }
+            } else {
+                throw new DataValidationException("ID of the Character most be positive");
             }
         } else {
-            throw new DataValidationException("modified character's data are wrong, null or empty");
+            throw new DataValidationException("Modified character's data are wrong, void, null or empty");
         }
     }
 //eliminacion
@@ -130,7 +137,7 @@ public class CharacterController {
 //    Para especificar el termino de búsqueda o filtros se deberán enviar como parámetros de query:
 //•	GET /characers?name=nombre
     @GetMapping(params = {"name"})
-    public ResponseEntity<CharacterModel> findByName(@RequestParam String name) throws DataValidationException, SQLException {
+    public ResponseEntity<CharacterModel> findByName(@RequestParam final String name) throws DataValidationException, SQLException {
         if (!StringUtils.isBlank(name)) {
             try {
                 CharacterModel response = characterService.findByName(name); // solo puede retornar un character ya que name es unique
@@ -148,7 +155,7 @@ public class CharacterController {
     }
 //•	GET /characers?age=edad
     @GetMapping(params = {"age"})
-    public ResponseEntity<List<CharacterModel>> findCharactersByAge(@RequestParam Integer age) throws DataValidationException, SQLException {
+    public ResponseEntity<List<CharacterModel>> findCharactersByAge(@RequestParam final Integer age) throws DataValidationException, SQLException {
         if (age > 0) {
             try {
                 List<CharacterModel> response = characterService.findCharactersByAge(age);
@@ -161,12 +168,12 @@ public class CharacterController {
                 throw new SQLException(e.getCause().getCause().getMessage());
             }
         } else {
-            throw new DataValidationException("Age cant be: null, empty, blank or negative\"");
+            throw new DataValidationException("Age must be positive");
         }
     }
     //•	GET /characers?weight=peso
     @GetMapping(params = {"weight"})
-    public ResponseEntity<List<CharacterModel>> findCharactersByWeight(@RequestParam Integer weight) throws DataValidationException, SQLException {
+    public ResponseEntity<List<CharacterModel>> findCharactersByWeight(@RequestParam final Integer weight) throws DataValidationException, SQLException {
         if (weight > 0) {
             try {
                 List<CharacterModel> response = characterService.findByWeight(weight);
@@ -179,13 +186,13 @@ public class CharacterController {
                 throw new SQLException(e.getCause().getCause().getMessage());
             }
         } else {
-            throw new DataValidationException("Weight cant be: null, empty, blank or negative");
+            throw new DataValidationException("Weight must be positive");
         }
     }
 
 //•	GET /characers?movies=idMovie
     @GetMapping(params = {"idMovie"})
-    public ResponseEntity<List<CharacterModel>> findCharactersByMovieId(@RequestParam Integer idMovie) throws DataValidationException, SQLException {
+    public ResponseEntity<List<CharacterModel>> findCharactersByMovieId(@RequestParam final Integer idMovie) throws DataValidationException, SQLException {
         if (idMovie > 0) {
             try {
                 List<CharacterModel> response = characterService.findCharactersByMovieId(idMovie);

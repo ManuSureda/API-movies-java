@@ -197,7 +197,7 @@ public class CharacterControllerTest {
     }
 
     @Test
-    void updateCharacterTestJpaSystemException() {
+    void updateCharacterTestJpaSystemException() throws SQLException {
         CharacterModelDto dto = new CharacterModelDto();
         dto.setAge(1);
         dto.setWeight(2);

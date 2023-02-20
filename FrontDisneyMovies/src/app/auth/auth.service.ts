@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginCredential } from '../models/login-credential';
@@ -16,30 +16,34 @@ export class AuthService {
 
   login(loginCredential : LoginCredential): Promise<any> {
 
-    const headers = new HttpHeaders()
-        .set('Content-Type', 'application/json')
-        .set('Authorization', sessionStorage.getItem('token'));
-
     const promise = this.http.post(this.loginUrl, loginCredential, {
-        headers: headers,
-        withCredentials: true
-    }).toPromise();
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }), 
+      observe: 'response'
+    })
+    .toPromise();
 
-    console.log(promise);
-    
     promise
       .then(response => {
-        console.log(response);
         
-        this.token = response['Authorization'];
-        sessionStorage.setItem('token', this.token);
+        // Verificar si la respuesta es una instancia de HttpResponse
+        if (response instanceof HttpResponse) {
+  
+          // Buscar el header de autorización en los headers
+          const authorizationHeader = response.headers.get('Authorization');
+          if (authorizationHeader) {
+            this.token = authorizationHeader;
+            sessionStorage.setItem('token', this.token);
+          } else {
+            console.error('No se encontró el header de Authorization en la respuesta.');
+          }
+        }
       })
       .catch(err => {
         console.log(err);
       });
-    
+  
     return promise;
-}
- 
-
+  }
+  
+  
 }
