@@ -1,6 +1,5 @@
 package com.disneymovie.disneyJava.user.config;
 
-import com.disneymovie.disneyJava.user.session.AdminSessionFilter;
 import com.disneymovie.disneyJava.user.session.SessionFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +19,17 @@ public class Configuration {
     @Autowired
     SessionFilter sessionFilter;
 
-    @Autowired
-    AdminSessionFilter adminSessionFilter;
-
     @Bean
     public FilterRegistrationBean myFilterClient() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(sessionFilter);
-        registration.addUrlPatterns("/api/movies*");
-        registration.addUrlPatterns("/api/movies/*");
-        registration.addUrlPatterns("/api/movies/*/");
-        registration.addUrlPatterns("/api/characters*");
-        registration.addUrlPatterns("/api/characters/*");
-        registration.addUrlPatterns("/api/characters/*/");
+//        registration.addUrlPatterns("/api/movies*");
+//        registration.addUrlPatterns("/api/movies/*");
+//        registration.addUrlPatterns("/api/movies/*/");
+////        registration.addUrlPatterns("/api/characters*");
+//        registration.addUrlPatterns("/api/characters/*");
+//        registration.addUrlPatterns("/api/characters/*/");
+        registration.addUrlPatterns("/api/*");
 
 //        registration.addUrlPatterns("/movies/*");
 //        registration.addUrlPatterns("/movies/*/");
@@ -42,23 +39,4 @@ public class Configuration {
         return registration;
      }
 
-    @Bean
-    public FilterRegistrationBean myFilterAdmin() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(adminSessionFilter);
-        registration.addUrlPatterns("/api/movies*");
-        registration.addUrlPatterns("/api/movies/*");
-        registration.addUrlPatterns("/api/movies/*/");
-        registration.addUrlPatterns("/api/characters*");
-        registration.addUrlPatterns("/api/characters/*");
-        registration.addUrlPatterns("/api/characters/*/");
-
-//        registration.addUrlPatterns("/movies/*");
-//        registration.addUrlPatterns("/movies/*/");
-//        registration.addUrlPatterns("/characters/*");
-//        registration.addUrlPatterns("/characters/*/");
-//        registration.addUrlPatterns("/auth/register");
-
-        return registration;
-    }
 }

@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/movies")
 public class MovieController {
 
@@ -34,10 +35,11 @@ public class MovieController {
     @GetMapping(params = { "idCharacter" })
     public ResponseEntity<List<MovieModelDto>> getMoviesByCharacterId(final Integer idCharacter) throws DataValidationException {
         if (idCharacter > 0) {
-            if (movieService.getMoviesByCharacterId(idCharacter).isEmpty()) {
+            List<MovieModelDto> response = movieService.getMoviesByCharacterId(idCharacter);
+            if (response.isEmpty()) {
                 return ResponseEntity.noContent().build();
             } else {
-                return ResponseEntity.ok().body(movieService.getMoviesByCharacterId(idCharacter));
+                return ResponseEntity.ok().body(response);
             }
         } else {
             throw new DataValidationException("Character ID must be positive");
@@ -51,10 +53,11 @@ public class MovieController {
     @GetMapping()
     public ResponseEntity<List<MovieProjection>> getAllMovieResume() throws SQLException {
         try {
-            if (movieService.getAllMovieResume().isEmpty()) {
+            List<MovieProjection> response = movieService.getAllMovieResume();
+            if (response.isEmpty()) {
                 return ResponseEntity.noContent().build();
             } else {
-                return ResponseEntity.ok().body(movieService.getAllMovieResume());
+                return ResponseEntity.ok().body(response);
             }
         } catch (JpaSystemException e) {
             throw new SQLException(e.getCause().getCause().getMessage());
@@ -66,10 +69,11 @@ public class MovieController {
     @GetMapping("/characters")
     public ResponseEntity<List<MovieModelDto>> getAllMoviesAndCharacters() throws SQLException {
         try {
-            if (movieService.getAllMoviesAndCharacters().isEmpty()) {
+            List<MovieModelDto> response = movieService.getAllMoviesAndCharacters();
+            if (response.isEmpty()) {
                 return ResponseEntity.noContent().build();
             } else {
-                return ResponseEntity.ok().body(movieService.getAllMoviesAndCharacters());
+                return ResponseEntity.ok().body(response);
             }
         } catch (JpaSystemException e) {
             throw new SQLException(e.getCause().getCause().getMessage());
@@ -103,8 +107,9 @@ public class MovieController {
     @GetMapping(params = {"idMovie"})
     public ResponseEntity<MovieModelDto> getMovieById(final Integer idMovie) throws DataValidationException {
         if (idMovie > 0) {
-            if (movieService.getMovieDtoById(idMovie) != null) {
-                return ResponseEntity.ok().body(movieService.getMovieDtoById(idMovie));
+            MovieModelDto response = movieService.getMovieDtoById(idMovie);
+            if (response != null) {
+                return ResponseEntity.ok().body(response);
             } else {
                 return ResponseEntity.noContent().build();
             }
@@ -155,10 +160,11 @@ public class MovieController {
     public ResponseEntity<MovieModel> findByTittle(@RequestParam String tittle) throws DataValidationException, SQLException {
         if (!StringUtils.isBlank(tittle)) {
             try {
-                if (movieService.findByTittle(tittle) == null) {
+                MovieModel response = movieService.findByTittle(tittle);
+                if (response == null) {
                     return ResponseEntity.noContent().build();
                 } else {
-                    return ResponseEntity.ok().body(movieService.findByTittle(tittle));
+                    return ResponseEntity.ok().body(response);
                 }
             } catch (JpaSystemException e) {
                 throw new SQLException(e.getCause().getCause().getMessage());

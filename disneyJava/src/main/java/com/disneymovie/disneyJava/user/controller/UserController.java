@@ -23,9 +23,9 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping("/auth")
 public class UserController {
     private final SessionManager sessionManager;
     private final UserService userService;

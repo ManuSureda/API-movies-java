@@ -6,7 +6,7 @@ import { CharacterModelDto } from '../dtos/character-model-dto';
   providedIn: 'root'
 })
 export class CharacterService {
-  apiUrl = "http://localhost:8080/api/characters";
+  apiUrl = 'http://localhost:8080/api/characters';
 
   constructor(private http : HttpClient) { }
 
@@ -36,7 +36,8 @@ export class CharacterService {
   }
 
   findByName(name: string): Promise<any> {
-    return this.http.get(this.apiUrl+'?name='+name)
+    const url = `${this.apiUrl}?name=${name}`;
+    return this.http.get(url)
     .toPromise();
   }
 

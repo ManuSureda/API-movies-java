@@ -1,7 +1,8 @@
 package com.disneymovie.disneyJava.user.session;
 
-import com.disneymovie.disneyJava.user.model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Service
+@Order(Ordered.HIGHEST_PRECEDENCE + 1)
 public class SessionFilter extends OncePerRequestFilter {
 
     @Autowired

@@ -21,8 +21,10 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/characters")
 public class CharacterController {
     @Autowired
@@ -65,9 +67,11 @@ public class CharacterController {
                 newCharacterDto.setIdCharacter(newId);
 
                 ArrayList<MovieModel> movieModels = new ArrayList<>();
+
                 for (Integer movieId: newCharacterDto.getMovieIdList() ) {
-                    if (movieService.findById(movieId).isPresent()) {
-                        movieModels.add(movieService.findById(movieId).get());
+                    Optional<MovieModel> movie = movieService.findById(movieId);
+                    if (movie.isPresent()) {
+                        movieModels.add(movie.get());
                     }
                 }
                 newCharacterDto.setMovieIdList(null);
@@ -84,8 +88,9 @@ public class CharacterController {
     @GetMapping("/{id}")
     public ResponseEntity<?> readCharacterById(@PathVariable("id") final Integer id) throws DataValidationException {
         if (id > 0) {
-            if (characterService.findById(id).isPresent()) {
-                return ResponseEntity.ok().body(characterService.findById(id).get());
+            Optional<CharacterModel> response = characterService.findById(id);
+            if (response.isPresent()) {
+                return ResponseEntity.ok().body(response.get());
             } else {
                 return ResponseEntity.noContent().build();
             }

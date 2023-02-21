@@ -27,6 +27,8 @@ export class AuthService {
         
         // Verificar si la respuesta es una instancia de HttpResponse
         if (response instanceof HttpResponse) {
+          console.log(response);
+          
   
           // Buscar el header de autorización en los headers
           const authorizationHeader = response.headers.get('Authorization');
