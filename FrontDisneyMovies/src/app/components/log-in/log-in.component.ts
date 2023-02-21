@@ -33,10 +33,21 @@ export class LogInComponent implements OnInit {
     loginCredential.email = this.email.value;
     loginCredential.password = this.password.value;
 
-    this.authService.login(loginCredential)
+    const promise = this.authService.login(loginCredential);
+    console.log("--------------------------------------------------------------------------");
+    console.log("log-in-component");
+    console.log(promise);    
+
+    promise
       .then(response => {
+        console.log("response del authService.login(login credentials) en log-in");
+        console.log(response);
+        
+        
         if (this.authService.token) {
-          let redirect = this.authService.redirectUrl ? this.router.parseUrl(this.authService.redirectUrl) : '/movies';
+          let redirect = this.authService.redirectUrl ? this.router.parseUrl(this.authService.redirectUrl) : '/characters';
+          console.log("redirect: " + redirect);
+          
           this.router.navigateByUrl(redirect);
         } else {
           this.alertMessage = "Incorrect email or password";

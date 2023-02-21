@@ -19,7 +19,7 @@ export class MovieComponent implements OnInit {
     promise
       .then(response => {
         response.forEach(resume => {
-          let movie : MovieModel = new MovieModel(); // crea una nueva instancia de MovieModel para cada elemento en la respuesta
+          let movie : MovieModel = new MovieModel(); 
           
           if (resume.img_url === '') {
             movie.setImgUrl(defaultMoviePoster);

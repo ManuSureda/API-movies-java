@@ -16,22 +16,37 @@ export class AuthService {
 
   login(loginCredential : LoginCredential): Promise<any> {
 
+    console.log("entre en el metodo login de Auth.Service.ts");    
+
+    // const promise = this.http.post(this.loginUrl, loginCredential, {
+    //   headers: new HttpHeaders({ 'Content-Type': 'application/json' }), 
+    //   observe: 'response'
+    // })
+    // .toPromise();
     const promise = this.http.post(this.loginUrl, loginCredential, {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' }), 
+       
       observe: 'response'
     })
     .toPromise();
 
+    console.log("promise the this.http.post(this.loginUrl, loginCredential, {headers: new HttpHeaders({ 'Content-Type': 'application/json' }),observe: 'response'})");
+    
+    console.log(promise);
+
     promise
       .then(response => {
+        console.log("jamaica");
         
+        console.log(response);
+
         // Verificar si la respuesta es una instancia de HttpResponse
         if (response instanceof HttpResponse) {
-          console.log(response);
-          
+          // console.log(response);
+          console.log(response.headers);
+          console.log(response.headers.get('authorization'));// en spring boot lo mando como Authorization pero aca lo toma con minuscula
   
           // Buscar el header de autorización en los headers
-          const authorizationHeader = response.headers.get('Authorization');
+          const authorizationHeader = response.headers.get('authorization');
           if (authorizationHeader) {
             this.token = authorizationHeader;
             sessionStorage.setItem('token', this.token);
@@ -41,6 +56,8 @@ export class AuthService {
         }
       })
       .catch(err => {
+        console.log("puerto rico");
+        
         console.log(err);
       });
   

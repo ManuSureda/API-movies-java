@@ -17,12 +17,31 @@ export class AuthInterceptorService implements HttpInterceptor {
     let request = req;
     
     if (token) {
+      console.log("entro al if token");
+      console.log(request);
+      console.log(req);
+      
       request = req.clone({ 
         setHeaders: {
-          Authorization: `${ token }` 
+          'authorization': `${ token }`,
+          'Content-Type': 'application/json' 
         } 
       });
+      console.log("aplico el setHeaders");
+      
+      console.log(request);
+      console.log(req);
     }
+
+    console.log("--------------------------------------------------------------------------");
+    console.log("auth-interceptor");
+    
+    console.log(token);
+    console.log(request);
+
+    console.log("--------------------------------------------------------------------------");
+    
+    
 
     return next.handle(request).pipe(
       catchError((err : HttpErrorResponse) => {
