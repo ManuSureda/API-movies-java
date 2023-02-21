@@ -10,7 +10,7 @@ export class AuthService {
 
   token = undefined;
   redirectUrl = undefined;
-  loginUrl = "http://localhost:8080/api/auth/login";
+  loginUrl = "http://localhost:8080/auth/login";
 
   constructor(private http : HttpClient, private router : Router) { }
 

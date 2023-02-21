@@ -18,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             @Param("pUser_role") Integer userRoleId,
             @Param("pEmail") String email,
             @Param("pPassword") String password) throws JpaSystemException;
+
+    User findByEmail(String email);
 }
