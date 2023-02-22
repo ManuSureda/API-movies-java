@@ -50,6 +50,10 @@ export class CharacterComponent implements OnInit {
   
 
   ngOnInit(): void {
+    console.log("--------------------------------------------");
+    console.log("entre al ngOnInit() de character.component.ts");
+    
+
     this.alertMessage = "";
     this.character = undefined;
     this.flagCreate = false;

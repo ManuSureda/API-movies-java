@@ -42,7 +42,7 @@ public class WebConfig implements WebMvcConfigurer {
     public FilterRegistrationBean myFilterClient() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(corsFilter);
-//        registration.addUrlPatterns("/api/*");
+        registration.addUrlPatterns("/api/*");
 
         return registration;
      }

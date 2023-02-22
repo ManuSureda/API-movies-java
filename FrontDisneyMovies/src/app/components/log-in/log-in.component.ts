@@ -25,6 +25,9 @@ export class LogInComponent implements OnInit {
   get password() { return this.loginForm.get('password'); }
 
   ngOnInit(): void {
+    console.log(sessionStorage);
+    sessionStorage.clear();
+    console.log(sessionStorage);
   }
 
   onSubmit() {
@@ -34,14 +37,14 @@ export class LogInComponent implements OnInit {
     loginCredential.password = this.password.value;
 
     const promise = this.authService.login(loginCredential);
-    console.log("--------------------------------------------------------------------------");
-    console.log("log-in-component");
-    console.log(promise);    
+    // console.log("--------------------------------------------------------------------------");
+    // console.log("log-in-component");
+    // console.log(promise);    
 
     promise
       .then(response => {
-        console.log("response del authService.login(login credentials) en log-in");
-        console.log(response);
+        // console.log("response del authService.login(login credentials) en log-in");
+        // console.log(response);
         
         
         if (this.authService.token) {

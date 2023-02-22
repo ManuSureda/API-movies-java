@@ -25,26 +25,6 @@ public class CorsFilter implements Filter {
         System.out.println("---ENTRE EN doFilter (CorsFilter)---");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-//        System.out.println("request headers: ");
-//        Enumeration<String> headerNames = httpRequest.getHeaderNames();
-//        while (headerNames.hasMoreElements()) {
-//            String headerName = headerNames.nextElement();
-//            String headerValue = httpRequest.getHeader(headerName);
-//            System.out.println(headerName + ": " + headerValue);
-//        }
-
-//        System.out.println("response headers: ");
-//        Collection<String> headerNamesResponse = httpResponse.getHeaderNames();
-//        for (String headerName : headerNamesResponse) {
-//            String headerValue = httpResponse.getHeader(headerName);
-//            System.out.println(headerName + ": " + headerValue);
-//        }
-//        System.out.println("------------");
-
-//        httpResponse.setHeader("Access-Control-Allow-Origin", "*");
-//        httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
-//        httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, authorization, X-Requested-With");
-//        httpResponse.setHeader("Access-Control-Max-Age", "3600");
 
         if ( httpRequest.getRequestURI().equals("/auth/login") ) {
             System.out.println("entre al primer if");
@@ -52,12 +32,23 @@ public class CorsFilter implements Filter {
             chain.doFilter(httpRequest, httpResponse);
         } else {
             System.out.println("entre al else");
+            System.out.println(httpRequest.getRequestURI());
+            System.out.println("request headers: ");
+
             String sessionToken = httpRequest.getHeader("authorization");
+            System.out.println(sessionToken);
             Session session = sessionManager.getSession(sessionToken);
+
+            httpResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+            httpResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
+            httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, authorization, X-Requested-With");
+            httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+            httpResponse.setHeader("Access-Control-Max-Age", "3600");
+
             if (null != session) {
                 System.out.println("ENTRE");
                 System.out.println(sessionToken + " - " + session.getToken());
-                chain.doFilter(request, response);
+                chain.doFilter(httpRequest, httpResponse);
             } else {
                 httpResponse.setStatus(HttpStatus.FORBIDDEN.value());
             }
