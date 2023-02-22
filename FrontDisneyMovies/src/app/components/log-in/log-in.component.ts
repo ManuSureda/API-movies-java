@@ -46,7 +46,6 @@ export class LogInComponent implements OnInit {
         
         if (this.authService.token) {
           let redirect = this.authService.redirectUrl ? this.router.parseUrl(this.authService.redirectUrl) : '/characters';
-          console.log("redirect: " + redirect);
           
           this.router.navigateByUrl(redirect);
         } else {

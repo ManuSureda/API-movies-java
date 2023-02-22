@@ -36,19 +36,30 @@ public class WebConfig implements WebMvcConfigurer {
 //                        .exposedHeaders("Authorization")
 //                        .maxAge(3600);// le quite el allowcredentials
 //            }
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedOrigins("*")
+//                        .allowedMethods("*")
+//                        .allowedMethods("OPTIONS")
+//                        .allowedHeaders("*")
+//                        .exposedHeaders("*");
+////                        .allowedOriginPatterns("*")
+////                        .allowedOriginPatterns("http://localhost:4200/")
+////                        .allowedOriginPatterns("http://localhost:4200/characters")
+////                        .allowedOriginPatterns("http://localhost:4200/movies")
+////                        .allowedOriginPatterns("http://localhost:8080/api/movies");
+//            }
+
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*")
+                        .allowedOriginPatterns("http://*.localhost:*")
                         .allowedMethods("*")
-                        .allowedMethods("OPTIONS")
                         .allowedHeaders("*")
-                        .exposedHeaders("*");
-//                        .allowedOriginPatterns("*")
-//                        .allowedOriginPatterns("http://localhost:4200/")
-//                        .allowedOriginPatterns("http://localhost:4200/characters")
-//                        .allowedOriginPatterns("http://localhost:4200/movies")
-//                        .allowedOriginPatterns("http://localhost:8080/api/movies");
+                        .exposedHeaders("authorization")
+                        .allowCredentials(true)
+                        .maxAge(3600);
             }
         };
     }

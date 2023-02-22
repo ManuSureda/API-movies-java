@@ -11,7 +11,7 @@ export class CharacterService {
   constructor(private http : HttpClient) { }
 
   resumeAllCharacters(): Promise<any> {
-    return this.http.get(this.apiUrl)
+    return this.http.get(this.apiUrl, { withCredentials: true })
     .toPromise();
   }
   
