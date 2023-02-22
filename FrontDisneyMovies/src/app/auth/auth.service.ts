@@ -18,16 +18,16 @@ export class AuthService {
 
     console.log("entre en el metodo login de Auth.Service.ts");    
 
+    const promise = this.http.post(this.loginUrl, loginCredential, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }), 
+      observe: 'response' //tendre que borrar esto?
+    })
+    .toPromise();
     // const promise = this.http.post(this.loginUrl, loginCredential, {
-    //   headers: new HttpHeaders({ 'Content-Type': 'application/json' }), 
+       
     //   observe: 'response'
     // })
     // .toPromise();
-    const promise = this.http.post(this.loginUrl, loginCredential, {
-       
-      observe: 'response'
-    })
-    .toPromise();
 
     console.log("promise the this.http.post(this.loginUrl, loginCredential, {headers: new HttpHeaders({ 'Content-Type': 'application/json' }),observe: 'response'})");
     

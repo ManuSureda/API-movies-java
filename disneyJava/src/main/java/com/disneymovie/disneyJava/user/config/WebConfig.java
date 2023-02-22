@@ -43,8 +43,8 @@ public class WebConfig implements WebMvcConfigurer {
                         .allowedMethods("*")
                         .allowedMethods("OPTIONS")
                         .allowedHeaders("*")
-                        .exposedHeaders("*")
-                        .allowedOriginPatterns("*");
+                        .exposedHeaders("*");
+//                        .allowedOriginPatterns("*")
 //                        .allowedOriginPatterns("http://localhost:4200/")
 //                        .allowedOriginPatterns("http://localhost:4200/characters")
 //                        .allowedOriginPatterns("http://localhost:4200/movies")

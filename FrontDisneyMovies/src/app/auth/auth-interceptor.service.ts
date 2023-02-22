@@ -17,20 +17,11 @@ export class AuthInterceptorService implements HttpInterceptor {
     let request = req;
     
     if (token) {
-      console.log("entro al if token");
-      console.log(request);
-      console.log(req);
-      
       request = req.clone({ 
         setHeaders: {
-          'authorization': `${ token }`,
-          'Content-Type': 'application/json' 
+          'authorization': `${ token }`, 
         } 
       });
-      console.log("aplico el setHeaders");
-      
-      console.log(request);
-      console.log(req);
     }
 
     console.log("--------------------------------------------------------------------------");
