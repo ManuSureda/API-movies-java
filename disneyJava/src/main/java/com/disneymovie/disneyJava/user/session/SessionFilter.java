@@ -25,30 +25,30 @@ public class SessionFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
-        String sessionToken = request.getHeader("authorization");
-        Session session = sessionManager.getSession(sessionToken);
-
-        System.out.println("--------------------");
-        System.out.println("cliente?");
-        Enumeration<String> headerNames = request.getHeaderNames();
-        if (headerNames != null) {
-            while (headerNames.hasMoreElements()) {
-                System.out.println("Header: " + request.getHeader(headerNames.nextElement()));
-            }
-        }
-        System.out.println("AAAAAAAAAAAAAAAAAAAA");
-        System.out.println(request.getHeader("authorization"));
-        System.out.println("AAAAAAAAAAAAAAAAAAAA");
-        System.out.println("--------------------");
-
-//        null != session && session.getLoggedUser().getUserRole().equals(UserRole.client)
-        if (null != session || request.getRequestURI().equals("/auth/login")) {
-            System.out.println("ENTRE");
-            System.out.println(sessionToken + " - " + session.getToken());
-            filterChain.doFilter(request, response);
-        } else {
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-        }
+//        System.out.println("no deberia entrar jeje");
+//        String sessionToken = request.getHeader("authorization");
+//        Session session = sessionManager.getSession(sessionToken);
+//
+//        System.out.println("--------------------");
+//        System.out.println("cliente?");
+//        Enumeration<String> headerNames = request.getHeaderNames();
+//        if (headerNames != null) {
+//            while (headerNames.hasMoreElements()) {
+//                System.out.println("Header: " + request.getHeader(headerNames.nextElement()));
+//            }
+//        }
+//        System.out.println("AAAAAAAAAAAAAAAAAAAA");
+//        System.out.println(request.getHeader("authorization"));
+//        System.out.println("AAAAAAAAAAAAAAAAAAAA");
+//        System.out.println("--------------------");
+//
+////        null != session && session.getLoggedUser().getUserRole().equals(UserRole.client)
+//        if (null != session || request.getRequestURI().equals("/auth/login")) {
+//            System.out.println("ENTRE");
+//            System.out.println(sessionToken + " - " + session.getToken());
+//            filterChain.doFilter(request, response);
+//        } else {
+//            response.setStatus(HttpStatus.FORBIDDEN.value());
+//        }
     }
 }
