@@ -18,6 +18,8 @@ export class CharacterComponent implements OnInit {
   flagUpdate = false;
   flagCreate = false;
 
+  selectedOption = "";
+
   updateForm = new FormGroup({
     uName:    new FormControl('', [CustomValidator.hasLeadingSpace()]),
     uAge:     new FormControl('', [Validators.min(1), CustomValidator.numbersOnly()]),
@@ -29,8 +31,8 @@ export class CharacterComponent implements OnInit {
     cName:   new FormControl('',[Validators.required, CustomValidator.hasLeadingSpace()],[CustomValidator.characterNameExist(this.characterService)]),
     cAge:    new FormControl('',[Validators.required, Validators.min(1), CustomValidator.numbersOnly(), CustomValidator.hasLeadingSpace()]),
     cWeight: new FormControl('',[Validators.required, Validators.min(1), CustomValidator.numbersOnly(), CustomValidator.hasLeadingSpace()]),
-    cImgUrl: new FormControl('assets/defaultCharacter.jpg', [CustomValidator.hasLeadingSpace(), CustomValidator.hasLeadingSpace()]),
-    cStory:  new FormControl('',[Validators.required])
+    cImgUrl: new FormControl('assets/defaultCharacter.jpg', [CustomValidator.hasLeadingSpace()]),
+    cStory:  new FormControl('',[Validators.required, CustomValidator.hasLeadingSpace()])
   });
 
   alertMessage = "";
@@ -50,9 +52,6 @@ export class CharacterComponent implements OnInit {
   
 
   ngOnInit(): void {
-    console.log("--------------------------------------------");
-    console.log("entre al ngOnInit() de character.component.ts");
-    
 
     this.alertMessage = "";
     this.character = undefined;
@@ -220,6 +219,22 @@ export class CharacterComponent implements OnInit {
           }
         }
       });
+  }
+
+  onSelectChange(event: any) {
+    const selectedOption = event.target.value;
+    
+    if (selectedOption === 'default') {
+      this.selectedOption = '';
+    } 
+    if (selectedOption === 'byName') {
+      console.log("byName");
+      this.selectedOption = 'byName';
+    } 
+    if (selectedOption === 'byAge') {
+      console.log("byAge");
+      this.selectedOption = 'byAge';
+    } 
   }
 
 }

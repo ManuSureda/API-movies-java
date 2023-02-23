@@ -28,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("http://*.localhost:*")
+                        .allowedOriginPatterns("http://localhost:4200/")
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .exposedHeaders("authorization")
@@ -42,7 +42,7 @@ public class WebConfig implements WebMvcConfigurer {
     public FilterRegistrationBean myFilterClient() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(corsFilter);
-        registration.addUrlPatterns("/api/*");
+//        registration.addUrlPatterns("/api/*");
 
         return registration;
      }

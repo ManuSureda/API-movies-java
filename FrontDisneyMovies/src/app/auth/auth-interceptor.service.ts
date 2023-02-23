@@ -11,38 +11,20 @@ export class AuthInterceptorService implements HttpInterceptor {
 
   constructor(private router : Router) { }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-    console.log("--------------------------------------------------------------------------");
-    console.log("comienzo auth-interceptor");
     
     const token = sessionStorage.getItem('token');
 
     let request = req;
     
     if (token) {
-      console.log("entre al if token");
-      console.log(request);
-      console.log(token);
-      console.log(request.headers);
       
       request = req.clone({ 
         setHeaders: {
           'authorization': `${ token }`, 
         } 
       });
-
-      console.log(request);
-      console.log("salgo del if token");
-      
+  
     }
-    
-    console.log(token);
-    console.log(request);
-
-    console.log("fin auth-interceptor");
-    console.log("--------------------------------------------------------------------------");
-    
-    
 
     return next.handle(request).pipe(
       catchError((err : HttpErrorResponse) => {

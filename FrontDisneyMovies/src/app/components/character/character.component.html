@@ -4,16 +4,32 @@
   <h5>{{ alertMessage }}</h5>
 </div>
 
-<div>
+<div class="w3-display-inline-block">
   <div class=" w3-card w3-border-bottom w3-border-light-grey">
     <div class="w3-left w3-hide-small w3-border-bottom w3-border-light-grey">
-      <h3 class="w3-bar-item w3-button w3-border-light-grey" (click)="ngOnInit()" style="cursor: pointer;">Characters</h3>
-      <h3 class="w3-bar-item w3-button w3-border-light-grey" (click)="createCharacter()" style="cursor: pointer;">Create Character</h3>
-      <h3 class="w3-bar-item w3-button w3-border-light-grey" (click)="createCharacter()" style="cursor: pointer;">Characters 3</h3>
-  
+      <h3 class="w3-bar-item w3-button w3-border-light-grey w3-display-inline-block" (click)="ngOnInit()" >Characters</h3>
+      <h3 class="w3-bar-item w3-button w3-border-light-grey w3-display-inline-block" (click)="createCharacter()">Create Character</h3>
+      <h3 class="w3-bar-item w3-button w3-border-light-grey w3-display-inline-block" style="cursor: help;">Search by:</h3>
+      <div class="w3-display-inline-block w3-right w3-border-bottom" style="padding-top: 16px;">
+        <select (change)="onSelectChange($event)">
+          <option value="default">-----</option>
+          <option value="byName">Nombre</option>
+          <option value="byAge">Edad</option>
+          <option value="byWeight">Peso</option>
+          <option value="byMovie">Pelicula</option>
+        </select>
+        <div *ngIf="selectedOption==='byName'" style="display:inline-block;">
+          <input type="text" placeholder="Name">
+        </div>
+        <div *ngIf="selectedOption==='byAge'" style="display:inline-block;">
+          <input type="text" placeholder="Age">
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+
 <br><br><br>
 
 <div class="w3-row-padding">
@@ -70,6 +86,7 @@
       <i class="fa fa-paper-plane"></i> Create
     </button>
   </form>
+  <!-- control name -->
   <div *ngIf="cName.invalid && (cName.dirty || cName.touched)" class="alert">
     <div *ngIf="cName.errors?.required" class="alert alert-danger">
         Name is required.
@@ -79,6 +96,51 @@
     </div>
     <div *ngIf="cName.errors?.characterNameExist" class="alert alert-danger">
         There is already a character with that name.
+    </div>
+  </div>
+  <!-- control age -->
+  <div *ngIf="cAge.invalid && (cAge.dirty || cAge.touched)" class="alert">
+    <div *ngIf="cAge.errors?.required" class="alert alert-danger">
+        Age is required.
+    </div>
+    <div *ngIf="cAge.errors?.min" class="alert alert-danger">
+        The minimum age is 1.
+    </div>
+    <div *ngIf="cAge.errors?.hasLeadingSpace" class="alert alert-danger">
+        Age cannot have a leading space.
+    </div>
+    <div *ngIf="cAge.errors?.numbersOnly" class="alert alert-danger">
+        Age can only contain numbers.
+    </div>
+  </div>
+  <!-- control weight -->
+  <div *ngIf="cWeight.invalid && (cWeight.dirty || cWeight.touched)" class="alert">
+    <div *ngIf="cWeight.errors?.required" class="alert alert-danger">
+        Weight is required.
+    </div>
+    <div *ngIf="cWeight.errors?.min" class="alert alert-danger">
+        The minimum weight is 1.
+    </div>
+    <div *ngIf="cWeight.errors?.numbersOnly" class="alert alert-danger">
+        Weight can only contain numbers.
+    </div>
+    <div *ngIf="cWeight.errors?.hasLeadingSpace" class="alert alert-danger">
+        Weight cannot have a leading space.
+    </div>
+  </div>
+  <!-- control ImgUrl -->
+  <div *ngIf="cImgUrl.invalid && (cImgUrl.dirty || cImgUrl.touched)" class="alert">
+    <div *ngIf="cImgUrl.errors?.hasLeadingSpace" class="alert alert-danger">
+        Poster path cannot have a leading space.
+    </div>
+  </div>
+  <!-- control story -->
+  <div *ngIf="cStory.invalid && (cStory.dirty || cStory.touched)" class="alert">
+    <div *ngIf="cStory.errors?.required" class="alert alert-danger">
+        Story is required.
+    </div>
+    <div *ngIf="cStory.errors?.hasLeadingSpace" class="alert alert-danger">
+        Story cannot have a leading space.
     </div>
   </div>
 </div>

@@ -11,6 +11,10 @@ public class SessionManager {
     Map<String, Session> sessionMap;
     int sessionExpiration = 2147483;
 
+    //BORRAR
+    public Map<String, Session> getSessionMap() {
+        return this.sessionMap;
+    }
 
     public SessionManager() {
         sessionMap = new Hashtable<>();
