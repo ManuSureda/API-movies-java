@@ -13,6 +13,7 @@ const routes: Routes = [
   { path: 'auth/logout', component: LogOutComponent, canActivate: [AuthGuard] },
   { path: 'auth/register', component: RegisterComponent },
   { path: 'movies', component: MovieComponent, canActivate: [AuthGuard] },
+  { path: 'movie/:id', component: MovieComponent, canActivate: [AuthGuard] },
   { path: 'characters', component: CharacterComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }

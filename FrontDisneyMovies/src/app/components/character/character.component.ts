@@ -5,6 +5,10 @@ import { CharacterModelDto } from 'src/app/dtos/character-model-dto';
 import { CharacterService } from 'src/app/services/character.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CustomValidator } from 'src/app/commons/custom-validator';
+import { MovieModel } from 'src/app/models/movie-model';
+import { MovieService } from 'src/app/services/movie.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MovieComponent } from '../movie/movie.component';
 
 @Component({
   selector: 'app-character',
@@ -12,16 +16,21 @@ import { CustomValidator } from 'src/app/commons/custom-validator';
   styleUrls: ['./character.component.css']
 })
 export class CharacterComponent implements OnInit {
+  
+  readonly defaultCharacterPoster : string = "assets/defaultCharacter.jpg";
 
   charactersResumeArray : Array<CharacterModel> = [];
   character = undefined;
+  
+  moviesByCharacterArray : Array<MovieModel> = [];
+  
+  selectedOption = "";
+  alertMessage = "";
   flagUpdate = false;
   flagCreate = false;
 
-  selectedOption = "";
-
   updateForm = new FormGroup({
-    uName:    new FormControl('', [CustomValidator.hasLeadingSpace()]),
+    uName:    new FormControl('', [CustomValidator.hasLeadingSpace()], [CustomValidator.characterNameExist(this.characterService)]),
     uAge:     new FormControl('', [Validators.min(1), CustomValidator.numbersOnly()]),
     uWeight:  new FormControl('', [Validators.min(1), CustomValidator.numbersOnly()]),
     uStory:   new FormControl('', [CustomValidator.hasLeadingSpace()]) 
@@ -35,9 +44,7 @@ export class CharacterComponent implements OnInit {
     cStory:  new FormControl('',[Validators.required, CustomValidator.hasLeadingSpace()])
   });
 
-  alertMessage = "";
-
-  constructor(private characterService : CharacterService) { }
+  constructor(private characterService : CharacterService, private movieService : MovieService, private router: Router, private route: ActivatedRoute) { }
 
   get uName()   { return this.updateForm.get('uName');   }
   get uAge()    { return this.updateForm.get('uAge');    }
@@ -50,14 +57,12 @@ export class CharacterComponent implements OnInit {
   get cName()   { return this.createForm.get('cName');   }     
   get cStory()  { return this.createForm.get('cStory');  }    
   
-
   ngOnInit(): void {
-
     this.alertMessage = "";
+    this.selectedOption = '';
     this.character = undefined;
     this.flagCreate = false;
 
-    const defaultCharacterPoster : string = "assets/defaultCharacter.jpg";
     const promise = this.characterService.resumeAllCharacters();
 
     promise
@@ -65,50 +70,14 @@ export class CharacterComponent implements OnInit {
         response.forEach(element => {
           let character = new CharacterModel();
           if (element.img_url === '') {
-            character.setImgUrl(defaultCharacterPoster);
+            character.setImgUrl(this.defaultCharacterPoster);
           } else {
             character.setImgUrl(element.img_url);
           }
-
           character.setName(element.name);
 
           this.charactersResumeArray.push(character);
         });
-        
-      })
-      .catch(err => {
-        if (err instanceof HttpErrorResponse) {
-          this.alertMessage = "Sorry, it seems like the server is down, please try again later";
-        }
-        console.log(err);
-      });
-  }
-
-  showCharacterByName(name: string): void {
-    this.flagCreate = false;
-    this.alertMessage = "";
-
-    this.charactersResumeArray = [];
-    const defaultCharacterPoster : string = "assets/defaultCharacter.jpg";
-    
-    const promise = this.characterService.findByName(name);
-
-    promise
-      .then(response => {
-        let char = new CharacterModel();
-
-        char.setIdCharacter(response.idCharacter);
-        char.setAge(response.age);
-        if (response.imgUrl === '') {
-          char.setImgUrl(defaultCharacterPoster);
-        } else {
-          char.setImgUrl(response.imgUrl);
-        }
-        char.setName(response.name);
-        char.setStory(response.story);
-        char.setWeight(response.weight);
-
-        this.character = char;
       })
       .catch(err => {
         console.log(err);
@@ -122,6 +91,92 @@ export class CharacterComponent implements OnInit {
       });
   }
 
+  showCharacterByName(name: string): void {
+    this.selectedOption = '';
+    this.flagCreate = false;
+    this.alertMessage = "";
+    this.character = undefined;
+
+    this.charactersResumeArray = [];
+    
+    const promise = this.characterService.findByName(name);
+
+    promise
+      .then(response => {
+        if (response != null) {
+          let char = new CharacterModel();
+  
+          char.setIdCharacter(response.idCharacter);
+          char.setAge(response.age);
+          if (response.imgUrl === '') {
+            char.setImgUrl(this.defaultCharacterPoster);
+          } else {
+            char.setImgUrl(response.imgUrl);
+          }
+          char.setName(response.name);
+          char.setStory(response.story);
+          char.setWeight(response.weight);
+  
+          this.getMoviesByCharacterId(char.getIdCharacter());
+  
+          this.character = char;
+        } else {
+          this.alertMessage = 'There is no character with the name: ' + name;
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 0) {
+            this.alertMessage = "Sorry, it seems like the server is down, please try again later";
+          } else {
+            this.alertMessage = err.error.description;
+          }
+        }
+      });
+  }
+
+  getMoviesByCharacterId(characterId : number): void {
+    this.alertMessage = "";
+
+    const promise = this.movieService.getMoviesByCharacterId(characterId);
+
+    promise
+      .then(response => {
+        this.moviesByCharacterArray = [];
+        response.forEach(element => {
+          let movie : MovieModel = new MovieModel(); 
+          
+          movie.setIdMovie(element.idMovie);
+          if (element.imgUrl === '') {
+            movie.setImgUrl("assets/defaultMovie.jpg");
+          } else {
+            movie.setImgUrl(element.imgUrl);
+          }
+          movie.setReleaseDate(new Date(element.releaseDate));
+          movie.setTittle(element.tittle);
+
+          this.moviesByCharacterArray.push(movie);
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 0) {
+            this.alertMessage = "Sorry, it seems like the server is down, please try again later";
+          } else {
+            this.alertMessage = err.error.description;
+          }
+        }
+      });
+  }
+
+  goToMovie(idMovie : number): void {
+    console.log("me voy a " + idMovie);
+    
+    this.router.navigate(['/movies'], { state: { id: idMovie } });
+  }
+
   updateCharacter(): void {
     this.alertMessage = "";
     this.flagUpdate = true;
@@ -129,6 +184,7 @@ export class CharacterComponent implements OnInit {
   }
 
   updateSubmit(): void {
+    this.selectedOption = '';
     this.alertMessage = "";
 
     let dto : CharacterModelDto = new CharacterModelDto();
@@ -159,6 +215,10 @@ export class CharacterComponent implements OnInit {
       });
   }
 
+  cancelUpdate(): void {
+    this.flagUpdate = false;
+  }
+
   createCharacter(): void {
     this.charactersResumeArray = [];
     this.character = undefined;
@@ -171,14 +231,12 @@ export class CharacterComponent implements OnInit {
     this.alertMessage = "";
 
     let dto : CharacterModelDto = new CharacterModelDto();
-    
-    const defaultCharacterPoster : string = "assets/defaultCharacter.jpg";
 
     dto.setName(this.cName.value);
     dto.setAge(this.cAge.value);
     dto.setWeight(this.cWeight.value);
     dto.setStory(this.cStory.value);
-    dto.setImgUrl(this.cImgUrl.value === '' ? defaultCharacterPoster : this.cImgUrl.value);
+    dto.setImgUrl(this.cImgUrl.value === '' ? this.defaultCharacterPoster : this.cImgUrl.value);
     
     const promise = this.characterService.createCharacter(dto);
 
@@ -221,21 +279,138 @@ export class CharacterComponent implements OnInit {
       });
   }
 
-  onSelectChange(event: any) {
-    const selectedOption = event.target.value;
-    
-    if (selectedOption === 'default') {
-      this.selectedOption = '';
-    } 
-    if (selectedOption === 'byName') {
-      console.log("byName");
-      this.selectedOption = 'byName';
-    } 
-    if (selectedOption === 'byAge') {
-      console.log("byAge");
-      this.selectedOption = 'byAge';
-    } 
+  onSelectChange(event: any): void {
+    this.selectedOption = event.target.value;
   }
+
+  searchByAge(age : number): void {
+    this.selectedOption = '';
+    const promise = this.characterService.findCharactersByAge(age);
+
+    promise
+      .then(response => {
+        if (response != null) {
+          response.forEach(element => {
+            let character = new CharacterModel();
+            if (element.img_url === '') {
+              character.setImgUrl(this.defaultCharacterPoster);
+            } else {
+              character.setImgUrl(element.img_url);
+            }
+            character.setName(element.name);
+  
+            this.charactersResumeArray.push(character);
+          });          
+        } else {
+          this.alertMessage = "There are no characters with that age: " + age;
+        }
+        
+      })
+      .catch(err => {
+        console.log(err);
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 0) {
+            this.alertMessage = "Sorry, it seems like the server is down, please try again later";
+          } else {
+            this.alertMessage = err.error.description;
+          }
+        }
+      });
+    
+  } 
+
+  searchByWeight(weight : number): void {
+    this.selectedOption = '';
+    const promise = this.characterService.findCharactersByWeight(weight);
+
+    promise
+      .then(response => {
+        if (response != null) {
+          response.forEach(element => {
+            let character = new CharacterModel();
+            if (element.img_url === '') {
+              character.setImgUrl(this.defaultCharacterPoster);
+            } else {
+              character.setImgUrl(element.img_url);
+            }
+            character.setName(element.name);
+  
+            this.charactersResumeArray.push(character);
+          });          
+        } else {
+          this.alertMessage = "There are no characters with that weight: " + weight;
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 0) {
+            this.alertMessage = "Sorry, it seems like the server is down, please try again later";
+          } else {
+            this.alertMessage = err.error.description;
+          }
+        }
+      });
+    
+  } 
+
+  searchByMovie(movie : string): void {
+    this.selectedOption = '';
+
+    const moviePromise = this.movieService.findByTittle(movie);
+
+    moviePromise
+      .then(response => {
+        if (response != null) {
+          const promise = this.characterService.findCharactersByMovieId(response.idMovie);
+          
+          promise
+            .then(response => {
+              if (response != null) {
+                this.charactersResumeArray = [];
+
+                response.forEach(element => {
+                  console.log(element);
+                  
+                  let character = new CharacterModel();
+                  if (element.imgUrl === '') {
+                    character.setImgUrl(this.defaultCharacterPoster);
+                  } else {
+                    character.setImgUrl(element.imgUrl);
+                  }
+                  character.setName(element.name);
+        
+                  this.charactersResumeArray.push(character);
+                });          
+              } else {
+                this.alertMessage = "Apparently this movie has been saved without any character: " + movie;
+              }
+            })
+            .catch(err => {
+              console.log(err);
+              if (err instanceof HttpErrorResponse) {
+                if (err.status === 0) {
+                  this.alertMessage = "Sorry, it seems like the server is down, please try again later";
+                } else {
+                  this.alertMessage = err.error.description;
+                }
+              }
+            });
+        } else {
+          this.alertMessage = "There are no movies with that title: " + movie;
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 0) {
+            this.alertMessage = "Sorry, it seems like the server is down, please try again later";
+          } else {
+            this.alertMessage = err.error.description;
+          }
+        }
+      });
+  } 
 
 }
 

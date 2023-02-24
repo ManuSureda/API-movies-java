@@ -41,12 +41,12 @@ export class CharacterService {
     .toPromise();
   }
 
-  findCharactersByAge(age: string): Promise<any> {
+  findCharactersByAge(age: number): Promise<any> {
     return this.http.get(this.apiUrl+'?age='+age)
     .toPromise();
   }
 
-  findCharactersByWeight(weight: string): Promise<any> {
+  findCharactersByWeight(weight: number): Promise<any> {
     return this.http.get(this.apiUrl+'?weight='+weight)
     .toPromise();
   }
