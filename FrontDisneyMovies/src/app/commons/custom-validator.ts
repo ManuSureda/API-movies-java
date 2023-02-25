@@ -23,7 +23,7 @@ export class CustomValidator {
     static characterNameExist(characterService : CharacterService): AsyncValidatorFn {
         return (control: AbstractControl): Promise<{ [key: string]: any } | null> => {
             if (control.value == '') {
-                return null;
+                return Promise.resolve(null); // <- Siempre tiene que ser un Promise en Asyn validator
             } else {
                 return characterService.findByName(control.value)
                     .then(response => {
