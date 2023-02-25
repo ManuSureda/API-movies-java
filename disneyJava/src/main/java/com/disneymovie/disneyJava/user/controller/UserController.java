@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/auth")
 public class UserController {
     private final SessionManager sessionManager;
