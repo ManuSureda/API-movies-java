@@ -8,7 +8,6 @@ import { CustomValidator } from 'src/app/commons/custom-validator';
 import { MovieModel } from 'src/app/models/movie-model';
 import { MovieService } from 'src/app/services/movie.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MovieComponent } from '../movie/movie.component';
 
 @Component({
   selector: 'app-character',
@@ -30,9 +29,10 @@ export class CharacterComponent implements OnInit {
   flagCreate = false;
 
   updateForm = new FormGroup({
-    uName:    new FormControl('', [CustomValidator.hasLeadingSpace()], [CustomValidator.characterNameExist(this.characterService)]),
-    uAge:     new FormControl('', [Validators.min(1), CustomValidator.numbersOnly()]),
-    uWeight:  new FormControl('', [Validators.min(1), CustomValidator.numbersOnly()]),
+    uName:    new FormControl('', [CustomValidator.hasLeadingSpace()]),
+    uAge:     new FormControl('', ),
+    uWeight:  new FormControl('', ),
+    uImgUrl:  new FormControl('', [CustomValidator.hasLeadingSpace()]),
     uStory:   new FormControl('', [CustomValidator.hasLeadingSpace()]) 
   });
 
@@ -49,6 +49,7 @@ export class CharacterComponent implements OnInit {
   get uName()   { return this.updateForm.get('uName');   }
   get uAge()    { return this.updateForm.get('uAge');    }
   get uWeight() { return this.updateForm.get('uWeight'); }
+  get uImgUrl() { return this.updateForm.get('uImgUrl'); }
   get uStory()  { return this.updateForm.get('uStory');  }
 
   get cAge()    { return this.createForm.get('cAge');    }    
@@ -61,6 +62,21 @@ export class CharacterComponent implements OnInit {
     this.alertMessage = "";
     this.selectedOption = '';
     this.character = undefined;
+    this.flagCreate = false;
+
+    const state = window.history.state;
+    if (state && state.characterName) {
+      this.showCharacterByName(state.characterName);
+    } else { 
+      this.showAllCharacters();
+    }
+  }
+
+  showAllCharacters(): void {
+    this.character = undefined;
+    this.selectedOption = "";
+    this.alertMessage = "";
+    this.flagUpdate = false;
     this.flagCreate = false;
 
     const promise = this.characterService.resumeAllCharacters();
@@ -171,9 +187,7 @@ export class CharacterComponent implements OnInit {
       });
   }
 
-  goToMovie(idMovie : number): void {
-    console.log("me voy a " + idMovie);
-    
+  goToMovie(idMovie : number): void {    
     this.router.navigate(['/movies'], { state: { id: idMovie } });
   }
 
@@ -185,34 +199,39 @@ export class CharacterComponent implements OnInit {
 
   updateSubmit(): void {
     this.selectedOption = '';
-    this.alertMessage = "";
+    this.alertMessage = '';
 
-    let dto : CharacterModelDto = new CharacterModelDto();
-    dto.setIdCharacter(this.character.getIdCharacter());
-    dto.setImgUrl(this.character.getImgUrl());
-    dto.setName(this.uName.value === '' ? this.character.getName() : this.uName.value);
-    dto.setAge(this.uAge.value === '' ? this.character.getAge() : this.uAge.value);
-    dto.setWeight(this.uWeight.value === '' ? this.character.getWeight() : this.uWeight.value);
-    dto.setStory(this.uStory.value === '' ? this.character.getStory() : this.uStory.value);
-    
-    const promise = this.characterService.updateCharacter(dto);
-    console.log(promise);
-    
-    promise
-      .then(response => {
-        this.flagUpdate = false;
-        this.showCharacterByName(dto.getName());
-      })
-      .catch(err => {
-        console.log(err);
-        if (err instanceof HttpErrorResponse) {
-          if (err.status === 0) {
-            this.alertMessage = "Sorry, it seems like the server is down, please try again later";
-          } else {
-            this.alertMessage = err.error.description;
-          }
-        } 
-      });
+    if (this.uName.value === '' && this.uAge.value === '' && this.uWeight.value === '' && this.uImgUrl.value === '' && this.uStory.value === '') {
+      console.log("no se modifico nada");
+      
+      this.flagUpdate = false;
+    } else {
+      let dto : CharacterModelDto = new CharacterModelDto();
+      dto.setIdCharacter(this.character.getIdCharacter());
+      dto.setName   (this.uName.value   === '' ? this.character.getName()   : this.uName.value);
+      dto.setAge    (this.uAge.value    === '' ? this.character.getAge()    : this.uAge.value);
+      dto.setWeight (this.uWeight.value === '' ? this.character.getWeight() : this.uWeight.value);
+      dto.setImgUrl (this.uImgUrl.value === '' ? this.character.getImgUrl() : this.uImgUrl.value);
+      dto.setStory  (this.uStory.value  === '' ? this.character.getStory()  : this.uStory.value);
+      
+      const promise = this.characterService.updateCharacter(dto);
+      
+      promise
+        .then(response => {
+          this.flagUpdate = false;
+          this.showCharacterByName(dto.getName());
+        })
+        .catch(err => {
+          console.log(err);
+          if (err instanceof HttpErrorResponse) {
+            if (err.status === 0) {
+              this.alertMessage = "Sorry, it seems like the server is down, please try again later";
+            } else {
+              this.alertMessage = err.error.description;
+            }
+          } 
+        });
+    }
   }
 
   cancelUpdate(): void {
@@ -290,12 +309,14 @@ export class CharacterComponent implements OnInit {
     promise
       .then(response => {
         if (response != null) {
+          this.charactersResumeArray = [];
+          
           response.forEach(element => {
             let character = new CharacterModel();
-            if (element.img_url === '') {
+            if (element.imgUrl === '') {
               character.setImgUrl(this.defaultCharacterPoster);
             } else {
-              character.setImgUrl(element.img_url);
+              character.setImgUrl(element.imgUrl);
             }
             character.setName(element.name);
   
@@ -326,12 +347,13 @@ export class CharacterComponent implements OnInit {
     promise
       .then(response => {
         if (response != null) {
+          this.charactersResumeArray = [];
           response.forEach(element => {
             let character = new CharacterModel();
-            if (element.img_url === '') {
+            if (element.imgUrl === '') {
               character.setImgUrl(this.defaultCharacterPoster);
             } else {
-              character.setImgUrl(element.img_url);
+              character.setImgUrl(element.imgUrl);
             }
             character.setName(element.name);
   

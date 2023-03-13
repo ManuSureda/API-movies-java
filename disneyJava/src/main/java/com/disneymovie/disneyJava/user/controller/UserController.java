@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/auth")
 public class UserController {
     private final SessionManager sessionManager;
@@ -38,7 +37,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody final LoginRequestDto loginRequestDto) throws InvalidLoginException, ValidationException {
-        System.out.println("llegue al metodo login");
         if (loginRequestDto.isValid()) {
             try {
                 User u = userService.login(loginRequestDto);
@@ -46,8 +44,6 @@ public class UserController {
                 ResponseEntity<?> response = ResponseEntity.ok()
                         .headers(createHeaders(token))
                         .build();
-                System.out.println(response);
-                System.out.println(response.getHeaders());
                 return response;
             } catch (ElementDoesNotExistException e) {
                 throw new InvalidLoginException("Email or password are wrong");

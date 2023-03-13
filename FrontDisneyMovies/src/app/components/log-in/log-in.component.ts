@@ -29,10 +29,7 @@ export class LogInComponent implements OnInit {
   }
 
   onSubmit() {
-
-    console.log(sessionStorage);
     sessionStorage.clear();
-    console.log(sessionStorage);
 
     let loginCredential = new LoginCredential();
     loginCredential.email = this.email.value;

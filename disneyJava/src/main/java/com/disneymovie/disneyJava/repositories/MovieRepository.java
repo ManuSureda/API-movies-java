@@ -1,5 +1,6 @@
 package com.disneymovie.disneyJava.repositories;
 
+import com.disneymovie.disneyJava.exceptions.DataValidationException;
 import com.disneymovie.disneyJava.models.MovieModel;
 import com.disneymovie.disneyJava.projections.MovieGenreProjection;
 import com.disneymovie.disneyJava.projections.MovieProjection;
@@ -44,7 +45,7 @@ public interface MovieRepository extends JpaRepository<MovieModel, Integer> {
     @Transactional
     @Modifying
     @Query(value = "insert into character_x_movie(id_movie, id_character) values (?, ?)", nativeQuery = true)
-    void addCharacterToMovie(Integer newID, Integer idCharacter);
+    void addCharacterToMovie(Integer newID, Integer idCharacter) throws DataValidationException, SQLException;
 
     @Procedure(procedureName = "sp_update_movie")
     void updateMovies(

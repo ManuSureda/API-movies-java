@@ -35,9 +35,8 @@ public class MovieModelDto {
 
     @JsonIgnore
     public boolean isValid() {
-        return !StringUtils.isBlank(imgUrl) &&
-                !StringUtils.isBlank(tittle) &&
-                releaseDate != null &&
-                score > 0 && score < 6;
+        return !StringUtils.isBlank(tittle) &&
+               releaseDate != null &&
+               score > 0 && score < 6;
     }
 }

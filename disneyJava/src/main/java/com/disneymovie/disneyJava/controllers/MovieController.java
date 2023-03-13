@@ -1,7 +1,9 @@
 package com.disneymovie.disneyJava.controllers;
 
+import com.disneymovie.disneyJava.dtos.CharacterModelDto;
 import com.disneymovie.disneyJava.exceptions.DataValidationException;
 import com.disneymovie.disneyJava.dtos.MovieModelDto;
+import com.disneymovie.disneyJava.models.CharacterModel;
 import com.disneymovie.disneyJava.models.MovieModel;
 import com.disneymovie.disneyJava.projections.MovieProjection;
 import com.disneymovie.disneyJava.services.MovieService;
@@ -18,7 +20,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/movies")
 public class MovieController {
 
@@ -95,7 +96,7 @@ public class MovieController {
                 newMovie.setCharacters(movieService.getCharactersModelByMovieId(newMovieId));
 
                 return ResponseEntity.created(new URI("http://localhost:8080/movies/"+newMovieId)).body(newMovie);
-            } catch (DataIntegrityViolationException e) {
+            } catch (DataIntegrityViolationException | DataValidationException e) {
                 throw new DataValidationException("The movie was created, but some of the ID movies genres are not present in the database");
             }
         } else {
@@ -126,9 +127,25 @@ public class MovieController {
 //    UPDATE
     @PutMapping("/")
     public ResponseEntity<?> updateMovie(@RequestBody final MovieModelDto movieModified) throws SQLException, DataValidationException {
+        System.out.println("entre:");
+        System.out.println(movieModified);
         if (movieModified.isValid()) {
+            System.out.println("pase el if");
             try {
                 movieService.updateMovie(movieModified);
+
+                if (!movieModified.getGenresIdList().isEmpty()) {
+                    for (Integer genreId:  movieModified.getGenresIdList()) {
+                        movieService.addGenreToMovie(movieModified.getIdMovie(), genreId);
+                    }
+                }
+
+                if (!movieModified.getCharactersIdList().isEmpty()) {
+                    for (Integer idCharacter : movieModified.getCharactersIdList()) {
+                        movieService.addCharactersToMovie(movieModified.getIdMovie(), idCharacter);
+                    }
+                }
+
                 return ResponseEntity.accepted().build();
             } catch (JpaSystemException e) {
                 throw new SQLException(e.getCause().getCause().getMessage());
@@ -214,6 +231,39 @@ public class MovieController {
             }
         } else {
             throw new DataValidationException("Wrong order");
+        }
+    }
+
+    // extra
+    @PutMapping()
+    public ResponseEntity<?> addCharacterToMovie(@RequestParam final Integer movieId,
+                                                 @RequestParam final Integer characterId) throws DataValidationException, SQLException {
+        System.out.println("-------ENTRE--------");
+        System.out.println("movieId: " +movieId);
+        System.out.println("characterId: " + characterId);
+        if (characterId > 0 && movieId > 0) {
+            MovieModelDto movie = movieService.getMovieDtoById(movieId);
+            boolean flag = false;
+            for (CharacterModel charModel: movie.getCharacters()) {
+                System.out.println("charModel: " + charModel.getIdCharacter());
+                if (characterId.equals(charModel.getIdCharacter())) {
+                    System.out.println("flag");
+                    flag = true;
+                }
+            }
+            if (flag) {
+                throw new SQLException("That character is already on the movie");
+            } else {
+                try {
+                    movieService.addCharactersToMovie(movieId, characterId);
+
+                    return ResponseEntity.accepted().build();
+                } catch (DataValidationException | SQLException e) {
+                    throw new DataValidationException("CharacterId is wrong.");
+                }
+            }
+        } else {
+            throw new DataValidationException("The character or movie ID are wrong");
         }
     }
 

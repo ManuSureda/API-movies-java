@@ -11,6 +11,11 @@ export class MovieService {
 
   constructor(private http : HttpClient) { }
 
+  getAllMovieGenres(): Promise<any> {
+    return this.http.get('http://localhost:8080/api/genres')
+    .toPromise();
+  }
+
   getMoviesByCharacterId(idCharacter: number):Promise<any> {
     return this.http.get(this.apiUrl+'?idCharacter='+idCharacter)
     .toPromise();
@@ -27,7 +32,7 @@ export class MovieService {
   }
 
   createMovie(dto: MovieModelDto): Promise<any> {
-    return this.http.post(this.apiUrl+'/characters',dto)
+    return this.http.post(this.apiUrl,dto)
     .toPromise();
   }
 
@@ -37,7 +42,9 @@ export class MovieService {
   }
 
   updateMovie(dto: MovieModelDto): Promise<any> {
-    return this.http.put(this.apiUrl+'/characters',dto)
+    console.log(dto);
+    
+    return this.http.put(this.apiUrl+'/',dto)
     .toPromise();
   }
 
@@ -58,6 +65,11 @@ export class MovieService {
 
   findAllByOrder(order: string): Promise<any> {
     return this.http.get(this.apiUrl+'?order='+order)
+    .toPromise();
+  }
+
+  addCharacterToMovie(movieId: number, characterId: number): Promise<any> {
+    return this.http.put(this.apiUrl+'?movieId='+movieId+'&characterId='+characterId,{})
     .toPromise();
   }
 }

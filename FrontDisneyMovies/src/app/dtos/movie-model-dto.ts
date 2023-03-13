@@ -2,13 +2,13 @@ import { CharacterModel } from "../models/character-model";
 import { MovieGenreModel } from "../models/movie-genre-model";
 
 export class MovieModelDto {
-    private idMovie: number;
-    private imgUrl: String;
-    private tittle: String;
-    private releaseDate: Date;
-    private score: number;
-    private genres: Array<MovieGenreModel> = [];
-    private genresIdList: Array<number> = [];
-    private characters: Array<CharacterModel> = [];
-    private charactersIdList: Array<number> = [];
+    idMovie: number;
+    imgUrl: String;
+    tittle: String;
+    releaseDate: Date;
+    score: number;
+    genres: Array<MovieGenreModel> = [];
+    genresIdList: Array<number> = [];
+    characters: Array<CharacterModel> = [];
+    charactersIdList: Array<number> = [];
 }

@@ -1,6 +1,7 @@
 package com.disneymovie.disneyJava.services;
 
 import com.disneymovie.disneyJava.dtos.MovieModelDto;
+import com.disneymovie.disneyJava.exceptions.DataValidationException;
 import com.disneymovie.disneyJava.models.CharacterModel;
 import com.disneymovie.disneyJava.models.MovieGenreModel;
 import com.disneymovie.disneyJava.models.MovieModel;
@@ -107,7 +108,7 @@ public class MovieService {
         return response;
     }
 
-    public Integer createMovie(MovieModelDto newMovie) throws SQLException, JpaSystemException, DataIntegrityViolationException {
+    public Integer createMovie(MovieModelDto newMovie) throws SQLException, JpaSystemException, DataIntegrityViolationException, DataValidationException {
 
         Integer newID = movieRepository.createMovie(
                 newMovie.getImgUrl(),
@@ -134,6 +135,10 @@ public class MovieService {
             }
         }
         return newID;
+    }
+
+    public void addCharactersToMovie(final Integer idMovie, final Integer idCharacter) throws DataValidationException, SQLException {
+        movieRepository.addCharacterToMovie(idMovie, idCharacter);
     }
 
     public MovieModelDto getMovieDtoById(Integer idMovie) {
@@ -180,6 +185,7 @@ public class MovieService {
     }
 
     public void updateMovie(MovieModelDto movieModified) {
+        System.out.println("llegue al updateMovie");
         movieRepository.updateMovies(
                 movieModified.getIdMovie(),
                 movieModified.getImgUrl(),
@@ -187,6 +193,11 @@ public class MovieService {
                 movieModified.getReleaseDate(),
                 movieModified.getScore()
         );
+        System.out.println("pase el updateMovie");
+    }
+
+    public void addGenreToMovie(final Integer idMovie, final Integer idGenre) throws SQLException {
+        movieRepository.addGenreToMovie(idMovie, idGenre);
     }
 
     public void deleteById(Integer id) {
